@@ -32,7 +32,7 @@ export default function App() {
   const reload=useCallback(async()=>{
     setLoading(true);setApiError(false);
     try{
-      const response=await fetch(`${API}/stations?limit=100`);
+      const response=await fetch(`${API}/stations?limit=100&includeUnverified=true`);
       if(!response.ok)throw Error("Station API failed");
       const data:unknown=await response.json();
       if(!data||typeof data!=="object"||!("stations" in data)||!Array.isArray(data.stations))throw Error("Invalid stations");
