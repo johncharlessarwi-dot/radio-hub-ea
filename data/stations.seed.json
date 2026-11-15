@@ -1,0 +1,152 @@
+[
+  {
+    "id": "clouds-fm",
+    "name": "Clouds FM",
+    "country": "TZ",
+    "city": null,
+    "frequency": null,
+    "language": [
+      "sw"
+    ],
+    "genre": [],
+    "logo": null,
+    "website": null,
+    "streamUrls": [],
+    "source": "official"
+  },
+  {
+    "id": "wasafi-fm",
+    "name": "Wasafi FM",
+    "country": "TZ",
+    "city": null,
+    "frequency": null,
+    "language": [
+      "sw"
+    ],
+    "genre": [],
+    "logo": null,
+    "website": null,
+    "streamUrls": [],
+    "source": "official"
+  },
+  {
+    "id": "e-fm",
+    "name": "E-FM",
+    "country": "TZ",
+    "city": null,
+    "frequency": null,
+    "language": [
+      "sw"
+    ],
+    "genre": [],
+    "logo": null,
+    "website": null,
+    "streamUrls": [],
+    "source": "official"
+  },
+  {
+    "id": "tbc-taifa",
+    "name": "TBC Taifa",
+    "country": "TZ",
+    "city": null,
+    "frequency": null,
+    "language": [
+      "sw"
+    ],
+    "genre": [],
+    "logo": null,
+    "website": null,
+    "streamUrls": [],
+    "source": "official"
+  },
+  {
+    "id": "radio-one",
+    "name": "Radio One",
+    "country": "TZ",
+    "city": null,
+    "frequency": null,
+    "language": [
+      "sw"
+    ],
+    "genre": [],
+    "logo": null,
+    "website": null,
+    "streamUrls": [],
+    "source": "official"
+  },
+  {
+    "id": "radio-free-africa",
+    "name": "Radio Free Africa",
+    "country": "TZ",
+    "city": null,
+    "frequency": null,
+    "language": [
+      "sw"
+    ],
+    "genre": [],
+    "logo": null,
+    "website": null,
+    "streamUrls": [],
+    "source": "official"
+  },
+  {
+    "id": "east-africa-radio",
+    "name": "East Africa Radio",
+    "country": "TZ",
+    "city": null,
+    "frequency": null,
+    "language": [
+      "sw"
+    ],
+    "genre": [],
+    "logo": null,
+    "website": null,
+    "streamUrls": [],
+    "source": "official"
+  },
+  {
+    "id": "times-fm",
+    "name": "Times FM",
+    "country": "TZ",
+    "city": null,
+    "frequency": null,
+    "language": [
+      "sw"
+    ],
+    "genre": [],
+    "logo": null,
+    "website": null,
+    "streamUrls": [],
+    "source": "official"
+  },
+  {
+    "id": "crown-fm",
+    "name": "Crown FM",
+    "country": "TZ",
+    "city": null,
+    "frequency": null,
+    "language": [
+      "sw"
+    ],
+    "genre": [],
+    "logo": null,
+    "website": null,
+    "streamUrls": [],
+    "source": "official"
+  },
+  {
+    "id": "choice-fm",
+    "name": "Choice FM",
+    "country": "TZ",
+    "city": null,
+    "frequency": null,
+    "language": [
+      "sw"
+    ],
+    "genre": [],
+    "logo": null,
+    "website": null,
+    "streamUrls": [],
+    "source": "official"
+  }
+]
