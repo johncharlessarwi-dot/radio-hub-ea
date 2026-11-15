@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Radio, Tv, Heart, Search, WifiOff, Play, Pause, Volume2, Moon, Sun, Clock3, Maximize2, X, ChevronRight, RefreshCw, AlertTriangle, Headphones, Signal, Globe2 } from "lucide-react";
+import { Radio, Tv, Heart, Search, WifiOff, Play, Pause, Volume2, Moon, Sun, Clock3, Maximize2, X, RefreshCw, AlertTriangle, Headphones, Signal, Globe2 } from "lucide-react";
 import type { Station } from "./features/radio/types";
 import { useRadioPlayer } from "./features/radio/useRadioPlayer";
+import { StationCard } from "./components/StationCard";
 import { readJson, saveJson, toggleId, pushRecent } from "./features/radio/preferences";
 import { t, type Language } from "./i18n/translations";
 
@@ -104,11 +105,7 @@ export default function App() {
         {loading?<div className="empty-state"><RefreshCw className="spin"/><p>{tr("loading")}</p></div>:
          apiError?<div className="empty-state"><WifiOff size={36}/><p>{tr("apiError")}</p><button className="primary-button" onClick={()=>void reload()}>{tr("retry")}</button></div>:
          displayed.length===0?<div className="empty-state"><Radio size={39}/><p>{tr("none")}</p></div>:
-         <div className="station-grid">{displayed.map(s=><article className={"station-card"+(player.station?.id===s.id?" active-station":"")} key={s.id}>
-           <div className="station-art">{s.logo?<img src={s.logo} alt="" loading="lazy" onError={e=>{e.currentTarget.style.display="none";}}/>:<Radio size={29}/>}</div>
-           <div className="station-info"><strong>{s.name}</strong><span>{s.city||s.country} · {s.genre.join(", ")||tr("radio")}</span><small><i className="status-dot"/>{s.country} · LIVE</small></div>
-           <div className="station-actions"><button className="favourite-button" aria-label={favourites.includes(s.id)?tr("unfavourite"):tr("favourite")} aria-pressed={favourites.includes(s.id)} onClick={()=>setFavourites(ids=>toggleId(ids,s.id))}><Heart fill={favourites.includes(s.id)?"currentColor":"none"} size={17}/></button><button className="play-button" aria-label={tr("play")+" "+s.name} onClick={()=>listen(s)}>{player.station?.id===s.id&&player.status==="playing"?<Pause size={18} fill="currentColor"/>:<Play size={18} fill="currentColor"/>}</button></div>
-         </article>)}</div>}
+         <div className="station-grid">{displayed.map(s=><StationCard key={s.id} station={s} selected={player.station?.id===s.id} playing={player.status==="playing"} favourite={favourites.includes(s.id)} tr={tr} onListen={listen} onToggle={id=>setFavourites(ids=>toggleId(ids,id))}/>)}</div>}
       </>:<div className="empty-state video-placeholder"><Tv size={42}/><h2>{tr("video")}</h2><p>{tr("videoSoon")}</p></div>}
       <footer>© REDIO HUB EA · {tr("footer")}</footer>
     </main>
