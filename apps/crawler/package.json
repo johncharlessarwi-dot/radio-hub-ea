@@ -8,7 +8,8 @@
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "lint": "eslint src --max-warnings=0"
+    "lint": "eslint src --max-warnings=0",
+    "import:community": "tsx src/jobs/import-community.ts"
   },
   "dependencies": {
     "@fastify/cors": "^10.0.0",
