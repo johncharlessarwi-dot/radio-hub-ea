@@ -13,6 +13,14 @@ describe("StationCard component",()=>{
     fireEvent.click(screen.getByRole("button",{name:"Sikiliza Test Radio"}));
     expect(onListen).toHaveBeenCalledWith(station);
   });
+  it("disables playback for unverified stations",()=>{
+    const onListen=vi.fn();
+    render(<StationCard station={{...station,streamUrls:[]}} selected={false} playing={false} favourite={false} tr={key=>t("sw",key)} onListen={onListen} onToggle={vi.fn()}/>);
+    const control=screen.getByRole("button",{name:"Haijathibitishwa"});
+    expect((control as HTMLButtonElement).disabled).toBe(true);
+    fireEvent.click(control);
+    expect(onListen).not.toHaveBeenCalled();
+  });
   it("toggles favourite without starting playback",()=>{
     const onListen=vi.fn(),onToggle=vi.fn();
     render(<StationCard station={station} selected={false} playing={false} favourite={false} tr={key=>t("sw",key)} onListen={onListen} onToggle={onToggle}/>);
