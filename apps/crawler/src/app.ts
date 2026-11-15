@@ -9,10 +9,10 @@ export async function createApp(db:RadioDb=openDatabase()) {
   seedDatabase(db,loadSeedData());
   app.get("/health",async()=>({status:"ok",service:"redio-crawler",database:"connected"}));
   app.get("/stations",async(request,reply)=>{
-    const result=z.object({search:z.string().max(100).optional(),country:z.string().max(3).optional(),limit:z.coerce.number().int().min(1).max(100).default(50),offset:z.coerce.number().int().min(0).default(0)}).safeParse(request.query);
+    const result=z.object({search:z.string().max(100).optional(),country:z.string().max(3).optional(),limit:z.coerce.number().int().min(1).max(100).default(50),offset:z.coerce.number().int().min(0).default(0),includeUnverified:z.enum(["true","false"]).optional()}).safeParse(request.query);
     if(!result.success)return reply.code(400).send({error:"invalid_query"});
-    const {search,country,limit,offset}=result.data;
-    const all=listStations(db).filter(s=>(!search||s.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()))&&(!country||s.country===country.toUpperCase()));
+    const {search,country,limit,offset,includeUnverified}=result.data;
+    const all=listStations(db,includeUnverified==="true").filter(s=>(!search||s.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()))&&(!country||s.country===country.toUpperCase()));
     return {stations:all.slice(offset,offset+limit),total:all.length};
   });
   app.get("/stations/:id",async(request,reply)=>{
