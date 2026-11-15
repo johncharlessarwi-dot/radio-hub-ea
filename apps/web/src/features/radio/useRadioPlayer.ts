@@ -53,9 +53,16 @@ export function useRadioPlayer() {
         if(!Hls.isSupported())throw Error("HLS unsupported");
         const player=new Hls({enableWorker:false,lowLatencyMode:false,maxBufferLength:12});
         hls.current=player;
+        await new Promise<void>((resolve,reject)=>{
+          const timeout=setTimeout(()=>reject(new Error("HLS manifest timed out")),12000);
+          player.on(Hls.Events.MANIFEST_PARSED,()=>{clearTimeout(timeout);resolve();});
+          player.on(Hls.Events.ERROR,(_event,data)=>{
+            if(data.fatal){clearTimeout(timeout);reject(new Error("HLS media error"));}
+          });
+          player.attachMedia(el);
+          player.loadSource(url);
+        });
         player.on(Hls.Events.ERROR,(_event,data)=>{if(data.fatal)recover();});
-        player.attachMedia(el);
-        player.loadSource(url);
       }else{el.src=url;}
       await el.play();
       if(current.current!==s||sourceIndex.current!==index)return;
