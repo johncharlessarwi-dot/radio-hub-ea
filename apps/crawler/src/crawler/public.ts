@@ -31,16 +31,33 @@ async function throttledFetch(url:string, fetcher:typeof fetch):Promise<Response
   return fetcher(url,{headers:{"User-Agent":AGENT,"Accept":"text/html,text/plain;q=0.9,*/*;q=0.1"},redirect:"error",signal:AbortSignal.timeout(9000)});
 }
 export function robotsAllows(content:string,path:string,userAgent="redio-hub-ea"):boolean{
-  let selected=false;let inGroup=false;let bestLength=-1;let allowed=true;
+  type Rule={path:string;allow:boolean};
+  type Group={agents:string[];rules:Rule[]};
+  const groups:Group[]=[];
+  let current:Group|null=null;
   for(const original of content.split(/\r?\n/)){
-    const line=original.replace(/#.*$/,"").trim();if(!line)continue;
-    const match=/^([\w-]+)\s*:\s*(.*)$/.exec(line);if(!match)continue;
+    const line=original.replace(/#.*$/,"").trim();
+    if(!line)continue;
+    const match=/^([\w-]+)\s*:\s*(.*)$/.exec(line);
+    if(!match)continue;
     const key=match[1].toLowerCase(),value=match[2].trim();
-    if(key==="user-agent"){inGroup=value==="*"||userAgent.toLowerCase().includes(value.toLowerCase());selected=inGroup||selected;continue;}
-    if(!inGroup||!selected||!["allow","disallow"].includes(key)||!value)continue;
-    if(path.startsWith(value)&&value.length>=bestLength){bestLength=value.length;allowed=key==="allow";}
+    if(key==="user-agent"){
+      if(!current||current.rules.length>0){current={agents:[],rules:[]};groups.push(current);}
+      current.agents.push(value.toLowerCase());
+    }else if(current&&(key==="allow"||key==="disallow")&&value){
+      current.rules.push({path:value,allow:key==="allow"});
+    }
   }
-  return allowed;
+  const ranked=groups.map(g=>({
+    rank:Math.max(-1,...g.agents.map(a=>a==="*"?0:userAgent.toLowerCase().includes(a)?a.length:-1)),
+    rules:g.rules,
+  }));
+  const highest=Math.max(-1,...ranked.map(g=>g.rank));
+  if(highest<0)return true;
+  const matching=ranked.filter(g=>g.rank===highest).flatMap(g=>g.rules)
+    .filter(r=>path.startsWith(r.path))
+    .sort((a,b)=>b.path.length-a.path.length||Number(b.allow)-Number(a.allow));
+  return matching[0]?.allow??true;
 }
 async function cappedText(response:Response):Promise<string> {
   if(!response.body)return "";
