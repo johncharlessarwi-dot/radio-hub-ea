@@ -1,0 +1,14 @@
+node_modules/
+dist/
+coverage/
+.env
+.env.*
+!.env.example
+*.db
+*.db-shm
+*.db-wal
+apps/web/android/.gradle/
+apps/web/android/local.properties
+*.keystore
+*.jks
+.DS_Store
