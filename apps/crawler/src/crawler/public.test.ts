@@ -4,12 +4,12 @@ describe("robots policy",()=>{
   it("respects wildcard disallows",()=>{expect(robotsAllows("User-agent: *\nDisallow: /private","/private/list")).toBe(false);});
   it("accepts public pages",()=>{expect(robotsAllows("User-agent: *\nDisallow: /private","/live")).toBe(true);});
   it("does not apply rules for a different crawler",()=>{
-    const robots="User-agent: OtherBot\\nDisallow: /\\nUser-agent: redio-hub-ea\\nAllow: /public";
+    const robots="User-agent: OtherBot\nDisallow: /\nUser-agent: redio-hub-ea\nAllow: /public";
     expect(robotsAllows(robots,"/public/live")).toBe(true);
     expect(robotsAllows(robots,"/unlisted")).toBe(true);
   });
   it("prefers the specific group over wildcard",()=>{
-    const robots="User-agent: *\\nDisallow: /\\nUser-agent: redio-hub-ea\\nAllow: /";
+    const robots="User-agent: *\nDisallow: /\nUser-agent: redio-hub-ea\nAllow: /";
     expect(robotsAllows(robots,"/radio")).toBe(true);
   });
   it("allows a more specific allow rule",()=>{expect(robotsAllows("User-agent: *\nDisallow: /\nAllow: /public","/public/radio")).toBe(true);});
