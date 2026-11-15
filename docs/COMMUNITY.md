@@ -5,3 +5,13 @@ This is optional. Radio Browser provides a free community directory that **does 
 Reference: https://docs.radio-browser.info/
 
 `fetchCommunityStations(country)` retrieves up to 100 candidates from a short allowlist of API mirrors. Import with `importCommunityStations(db, entries)` in an operator-controlled workflow. Do not enable arbitrary host selection or expose an unauthenticated import endpoint.
+
+## Manual operator import / Kuongeza kwa mikono
+
+From the repository root, after `npm install` and configuring `DB_PATH`, run:
+
+```bash
+npm run import:community -w @redio/crawler -- TZ
+```
+
+Replace `TZ` with `KE`, `UG`, `RW` or `BI` as needed. This downloads up to 100 candidates and stores their streams as **unapproved**. No public upload/import API exists; review broadcaster permissions and stream safety before approving any stream. This operation must not be treated as a health check or proof of authorization.
