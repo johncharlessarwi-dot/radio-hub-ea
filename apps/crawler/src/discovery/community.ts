@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { openDatabase, type RadioDb } from "../db/database.js";
+import type { RadioDb } from "../db/database.js";
 import { safePublicHttpUrl } from "../parsers/streams.js";
 
 const Country=z.enum(["TZ","KE","UG","RW","BI"]);
