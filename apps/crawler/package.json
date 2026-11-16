@@ -9,7 +9,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "lint": "eslint src --max-warnings=0",
-    "import:community": "tsx src/jobs/import-community.ts"
+    "import:community": "tsx src/jobs/import-community.ts",
+    "import:videos": "tsx src/jobs/import-videos.ts"
   },
   "dependencies": {
     "@fastify/cors": "^10.0.0",
