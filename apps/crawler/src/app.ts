@@ -8,6 +8,12 @@ export async function createApp(db:RadioDb=openDatabase()) {
   const app=Fastify({logger:false,bodyLimit:8192});
   await app.register(rateLimit,{max:60,timeWindow:"1 minute",errorResponseBuilder:()=>({error:"rate_limited"})});
   await app.register(cors,{origin:process.env.WEB_ORIGIN?.split(",")??["http://localhost:5173"]});
+  app.addHook("onSend",async(_request,reply,payload)=>{
+    reply.header("X-Content-Type-Options","nosniff");
+    reply.header("Cache-Control","no-store");
+    reply.header("Referrer-Policy","no-referrer");
+    return payload;
+  });
   seedDatabase(db,loadSeedData());
   app.get("/health",async()=>({status:"ok",service:"redio-crawler",database:"connected"}));
   app.get("/stations",async(request,reply)=>{
