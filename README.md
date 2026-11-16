@@ -41,3 +41,9 @@ All station broadcasts belong to their respective publishers. See [LEGAL.md](LEG
 The Video tab now includes a source-approved catalogue, official YouTube iframe playback, HTTPS HLS video support, broadcaster attribution, and links to original sources. Audio playback is paused when video starts. No broadcast URLs have been invented and the initial video directory is empty until operator review.
 
 See [Phase 4 Video Guide](docs/PHASE4_VIDEO.md) for metadata import and validation. **CI green, real-device playback, signed Android APK and production release are not yet verified.**
+
+## Phase 5 — PWA + Android packaging
+
+The app now includes offline-shell PWA configuration, automatically generated 192×192 and 512×512 icons, a browser install control, and Capacitor Android build scripts. GitHub Actions can compile an Android debug APK on pull requests; a version tag triggers a workflow that requires GitHub signing secrets and a production HTTPS API URL, then signs and publishes the APK to GitHub Releases.
+
+**Not released:** no CI/build success, signed APK, real device install, or native Android background-playback service has been verified yet. A browser Media Session implementation is not a substitute for native background audio. See [Android build and release instructions](docs/ANDROID_BUILD.md).
