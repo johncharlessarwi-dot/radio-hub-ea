@@ -1,5 +1,7 @@
 name: Android Build Verification
 on:
+  push:
+    branches: [main]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -26,6 +28,7 @@ jobs:
         run: |
           npx cap add android
           npx cap sync android
+          npm run android:native
       - name: Compile Android debug APK (unsigned test artifact)
         working-directory: apps/web/android
         run: |
