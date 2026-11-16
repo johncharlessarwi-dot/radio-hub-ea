@@ -28,6 +28,7 @@ export function normalizeCommunityStation(input:unknown): (CommunityStation & {s
   return {...row,streamUrl};
 }
 export function importCommunityStations(db:RadioDb, entries:unknown[]):{imported:number;skipped:number} {
+  if(entries.length>100)throw Error("Community import exceeds 100 records");
   const existing=db.prepare("SELECT name,country FROM stations").all() as Array<{name:string;country:string}>;
   const identities=new Set(existing.map(s=>stationIdentity(s.name,s.country)));
   const addStation=db.prepare("INSERT OR IGNORE INTO stations(id,name,country,city,frequency,languages,genres,logo,website,source) VALUES (?,?,?,NULL,NULL,?,?,?,?, 'community')");
