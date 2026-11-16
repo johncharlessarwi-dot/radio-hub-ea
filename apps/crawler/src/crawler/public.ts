@@ -76,6 +76,7 @@ export async function crawlPublicStation(db:RadioDb,stationId:string,website:str
   const robotUrl=new URL("/robots.txt",url).href;
   const robotResponse=await throttledFetch(robotUrl,fetcher);
   if(robotResponse.status!==404&&!robotResponse.ok)throw Error("Could not verify robots.txt");
+  if(robotResponse.redirected)throw Error("robots redirect forbidden");
   const robots=robotResponse.ok?await cappedText(robotResponse):"";
   if(!robotsAllows(robots,new URL(url).pathname))return {discovered:0,blocked:true};
   const page=await throttledFetch(url,fetcher);
