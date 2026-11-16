@@ -31,7 +31,7 @@ export async function createApp(db:RadioDb=openDatabase()) {
   });
   app.get("/genres",async()=>({genres:[...new Set(listStations(db).flatMap(s=>s.genre))].sort()}));
   app.get("/countries",async()=>({countries:[...new Set(listStations(db).map(s=>s.country))].sort()}));
-  app.post("/reports",async(request,reply)=>{
+  app.post("/reports",{config:{rateLimit:{max:5,timeWindow:"1 minute"}}},async(request,reply)=>{
     const parsed=z.object({stationId:z.string().regex(/^[a-z0-9-]{1,80}$/),detail:z.string().trim().min(1).max(500).optional()}).strict().safeParse(request.body);
     if(!parsed.success)return reply.code(400).send({error:"invalid_report"});
     const exists=db.prepare("SELECT id FROM stations WHERE id=?").get(parsed.data.stationId);
