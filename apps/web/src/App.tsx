@@ -20,6 +20,7 @@ export default function App() {
   const [city,setCity]=useState("");
   const [genre,setGenre]=useState("");
   const [tab,setTab]=useState<Tab>("radio");
+  const [videoVersion,setVideoVersion]=useState(0);
   const [section,setSection]=useState<Section>("all");
   const [language,setLanguage]=useState<Language>(()=>readJson<Language>("language","sw"));
   const [theme,setTheme]=useState<"dark"|"light">(()=>readJson<"dark"|"light">("theme","dark"));
@@ -68,6 +69,7 @@ export default function App() {
 
   const listen=(station:Station)=>{
     if(!station.streamUrls.length)return;
+    setVideoVersion(version=>version+1);
     setRecent(ids=>pushRecent(ids,station.id));player.play(station);
   };
   const report=async()=>{
@@ -107,7 +109,7 @@ export default function App() {
          apiError?<div className="empty-state"><WifiOff size={36}/><p>{tr("apiError")}</p><button className="primary-button" onClick={()=>void reload()}>{tr("retry")}</button></div>:
          displayed.length===0?<div className="empty-state"><Radio size={39}/><p>{tr("none")}</p></div>:
          <div className="station-grid">{displayed.map(s=><StationCard key={s.id} station={s} selected={player.station?.id===s.id} playing={player.status==="playing"} favourite={favourites.includes(s.id)} tr={tr} onListen={listen} onToggle={id=>setFavourites(ids=>toggleId(ids,id))}/>)}</div>}
-      </>:<VideoTab apiBase={API} tr={tr} onVideoStart={player.pause}/>}
+      </>:<VideoTab key={videoVersion} apiBase={API} tr={tr} onVideoStart={player.pause}/>}
       <footer>© REDIO HUB EA · {tr("footer")}</footer>
     </main>
     {player.station&&<div className={"player-bar"+(player.expanded?" expanded":"")} role="region" aria-label="Radio player">
@@ -116,7 +118,7 @@ export default function App() {
         <div className="player-label"><strong>{player.station.name}</strong><span>{player.status==="playing"?tr("playing"):player.status==="reconnecting"?tr("reconnecting"):player.status==="unavailable"?tr("unavailable"):player.status==="loading"?tr("connecting"):tr("pause")}</span></div>
         <div className="player-controls">
           <button className="icon-control" aria-label={tr("next")} onClick={player.nextSource}><RefreshCw size={18}/></button>
-          <button className="player-primary" aria-label={player.status==="playing"?tr("pause"):tr("play")} onClick={()=>player.status==="playing"?player.pause():player.resume()}>{player.status==="playing"?<Pause fill="currentColor" size={20}/>:<Play fill="currentColor" size={20}/>}</button>
+          <button className="player-primary" aria-label={player.status==="playing"?tr("pause"):tr("play")} onClick={()=>{if(player.status==="playing"){player.pause();}else{setVideoVersion(version=>version+1);player.resume();}}}>{player.status==="playing"?<Pause fill="currentColor" size={20}/>:<Play fill="currentColor" size={20}/>}</button>
           <button className="icon-control" aria-label={player.expanded?tr("close"):"Expand"} onClick={()=>player.setExpanded(!player.expanded)}>{player.expanded?<X size={19}/>:<Maximize2 size={18}/>}</button>
         </div>
       </div>
