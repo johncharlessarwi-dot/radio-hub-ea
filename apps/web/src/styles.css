@@ -12,3 +12,21 @@
 
 /* Metadata-only entries cannot be played until their streams are verified. */
 .unavailable-dot{background:#f0b65d;box-shadow:none}.play-button:disabled{cursor:not-allowed;background:#2b3950;color:#8899b4;opacity:.65}.station-card:has(.play-button:disabled):hover{transform:none}
+
+/* Official live video — responsive player and clear broadcaster attribution */
+.video-section{min-height:300px}.video-intro{max-width:720px;color:#96a9ca;line-height:1.65;margin:-6px 0 25px}
+.video-filters{max-width:300px;display:block}.video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:20px}
+.video-card{overflow:hidden;background:linear-gradient(145deg,#172139,#101828);border:1px solid #33415d;border-radius:19px}
+.video-card-symbol{aspect-ratio:16/8;display:flex;align-items:center;justify-content:center;position:relative;background:radial-gradient(circle at 50% 40%,#263d68,#101829);color:#54d7ed}
+.video-card-symbol span{position:absolute;top:15px;left:16px;background:#f04e69;color:#fff;font-size:10px;font-weight:800;letter-spacing:.08em;padding:5px 9px;border-radius:5px}
+.video-card-body{padding:20px}.video-country{font-size:11px;color:#42d4ef;letter-spacing:.12em;font-weight:800}
+.video-card h3{font-size:19px;letter-spacing:-.02em;margin:8px 0}.video-card p{color:#b0bdd3;font-size:14px;margin:0 0 8px}.video-card small{color:#8999b8;font-size:12px}
+.video-card-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:18px}
+.video-play,.official-link{display:inline-flex;align-items:center;gap:8px;text-decoration:none}.official-link{color:#66dbf5;font-weight:650;font-size:13px}
+.video-active{background:#121b2e;border:1px solid #3c4b69;border-radius:18px;overflow:hidden;padding:15px;margin:0 0 30px}
+.video-active-header{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:12px}.video-active-header strong{font-size:16px}
+.broadcast-video{display:block;width:100%;aspect-ratio:16/9;border:0;border-radius:10px;background:#05070b;max-height:70vh}
+.video-attribution{margin:15px 0 10px;font-size:13px;color:#aabbd6}
+:root[data-theme="light"] .video-card,:root[data-theme="light"] .video-active{background:#fff;color:#142038}
+:root[data-theme="light"] .video-intro,:root[data-theme="light"] .video-card p{color:#53647a}
+@media(max-width:700px){.video-filters{max-width:none}.video-grid{grid-template-columns:1fr}.video-active{padding:10px}.video-card-symbol{aspect-ratio:16/7}}
