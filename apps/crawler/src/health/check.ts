@@ -25,7 +25,7 @@ export async function checkStream(url: string, fetcher: typeof fetch = fetch): P
         headers: method==="GET" ? {Range:"bytes=0-4095"} : {},
       });
       if(response.redirected||response.status>=300&&response.status<400)return {status:"restricted",latencyMs:Math.round(performance.now()-start),checkedAt,httpStatus:response.status,contentType:null,error:"Redirect disallowed"};
-      const contentType=response.headers.get("content-type")?.toLowerCase() ?? "";
+      const contentType=(response.headers.get("content-type")??"").slice(0,128).toLowerCase();
       const latencyMs=Math.round(performance.now()-start);
       if ([401,403,451].includes(response.status)) return {status:"restricted",latencyMs,checkedAt,httpStatus:response.status,contentType,error:"Access restricted"};
       if (response.ok && accepted(contentType,url)) {
