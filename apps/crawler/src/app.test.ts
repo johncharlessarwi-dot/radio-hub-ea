@@ -11,4 +11,19 @@ describe("Fastify API",()=>{
     expect((await app.inject({method:"POST",url:"/reports",payload:{stationId:"clouds-fm",detail:"Broken"}})).statusCode).toBe(202);
     await app.close();
   });
+
+  it("publishes only approved video sources and retains attribution",async()=>{
+    const db=openDatabase(":memory:");
+    const statement=db.prepare(`INSERT INTO video_sources(id,title,broadcaster,source_url,type,attribution,approved,country,official_website,verified_at)
+      VALUES (?,?,?,?,?,?,?,?,?,?)`);
+    statement.run("approved-video","Official broadcast","Example TV","https://www.youtube.com/watch?v=abcdefghijk","youtube","Source: Example TV",1,"TZ","https://example.org","2026-11-16T00:00:00.000Z");
+    statement.run("pending-video","Pending broadcast","Example TV","https://www.youtube.com/watch?v=abcdefghijk","youtube","Source: Example TV",0,"TZ","https://example.org","2026-11-16T00:00:00.000Z");
+    const app=await createApp(db);
+    const response=await app.inject("/videos?country=TZ");
+    expect(response.statusCode).toBe(200);
+    expect(response.json().videos).toHaveLength(1);
+    expect(response.json().videos[0]).toMatchObject({id:"approved-video",attribution:"Source: Example TV",country:"TZ"});
+    expect((await app.inject("/videos?country=BAD")).statusCode).toBe(400);
+    await app.close();
+  });
 });
