@@ -32,6 +32,7 @@ public class NativeRadioPlugin extends Plugin {
     Intent intent = new Intent(getContext(), RadioPlaybackService.class);
     intent.setAction(RadioPlaybackService.ACTION_PLAY);
     intent.putExtra("url", url);
+    if (call.getArray("urls") != null) intent.putExtra("urlsJson", call.getArray("urls").toString());
     intent.putExtra("title", title);
     try {
       if (Build.VERSION.SDK_INT >= 26) getContext().startForegroundService(intent);
