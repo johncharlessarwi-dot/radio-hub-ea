@@ -14,6 +14,7 @@ export const videoSourceSchema=z.object({
   verifiedAt:z.string().datetime(),
   approved:z.boolean().default(false)
 }).superRefine((item,ctx)=>{
+  if(Date.parse(item.verifiedAt)>Date.now()+300_000){ctx.addIssue({code:"custom",message:"Future verification timestamp"});return;}
   let source:URL,official:URL;
   try {source=new URL(item.sourceUrl);official=new URL(item.officialWebsite);}
   catch {ctx.addIssue({code:"custom",message:"Invalid URL"});return;}
