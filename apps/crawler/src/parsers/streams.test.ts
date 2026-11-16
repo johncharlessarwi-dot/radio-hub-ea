@@ -22,4 +22,5 @@ describe("public stream discovery", () => {
   it("rejects URLs beyond the accepted 2048-byte limit",()=>{expect(safePublicHttpUrl("https://example.org/"+ "x".repeat(2200))).toBeNull();});
   it("blocks loopback hostname representations",()=>{expect(safePublicHttpUrl("http://127.0.0.1/private")).toBeNull();expect(safePublicHttpUrl("http://0x7f000001/")).toBeNull();});
   it("rejects credentials and management service ports",()=>{expect(safePublicHttpUrl("https://user:pass@radio.example/live")).toBeNull();expect(safePublicHttpUrl("http://radio.example:2375/live")).toBeNull();});
+  it("rejects newline and control-character injection",()=>{expect(safePublicHttpUrl("https://radio.example/live\nX-Test: bad")).toBeNull();});
 });
