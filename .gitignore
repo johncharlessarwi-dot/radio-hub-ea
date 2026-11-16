@@ -12,3 +12,7 @@ apps/web/android/local.properties
 *.keystore
 *.jks
 .DS_Store
+
+# PWA generated PNG icons (source: apps/web/public/icon.svg)
+apps/web/public/icon-192.png
+apps/web/public/icon-512.png
