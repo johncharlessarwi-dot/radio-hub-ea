@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type Hls from "hls.js";
+import { isNativeRadio, nativeRadio } from "./nativeRadio";
 import type { Station, PlaybackStatus } from "./types";
 
 export function useRadioPlayer() {
+  const native=isNativeRadio();
   const audio=useRef<HTMLAudioElement|null>(null);
   const hls=useRef<Hls|null>(null);
   const retry=useRef<ReturnType<typeof setTimeout>|null>(null);
@@ -25,10 +27,10 @@ export function useRadioPlayer() {
     if(audio.current){audio.current.pause();audio.current.removeAttribute("src");audio.current.load();}
   },[]);
   const stop=useCallback(()=>{
-    stopTimers();cleanSource();current.current=null;attempts.current=0;
+    stopTimers();cleanSource();if(native)void nativeRadio.stop();current.current=null;attempts.current=0;
     setStation(null);setStatus("idle");setSleepMinutes(0);setExpanded(false);
     if("mediaSession" in navigator)navigator.mediaSession.metadata=null;
-  },[cleanSource,stopTimers]);
+  },[cleanSource,stopTimers,native]);
   const recover=useCallback(()=>{
     const s=current.current;
     if(!s)return;
@@ -47,6 +49,11 @@ export function useRadioPlayer() {
     cleanSource();sourceIndex.current=index;setStatus("loading");
     const url=s.streamUrls[index];
     try{
+      if(native){
+        await nativeRadio.play(url,s.name);
+        if(current.current===s&&sourceIndex.current===index){attempts.current=0;setStatus("playing");}
+        return;
+      }
       if(/\.m3u8(?:[?#]|$)/i.test(url)&&!el.canPlayType("application/vnd.apple.mpegurl")){
         const {default:Hls}=await import("hls.js");
         if(current.current!==s||sourceIndex.current!==index)return;
@@ -70,29 +77,31 @@ export function useRadioPlayer() {
     }catch{
       if(current.current===s&&sourceIndex.current===index)recover();
     }
-  },[cleanSource,recover]);
+  },[cleanSource,recover,native]);
   startSource.current=start;
   const play=useCallback((next:Station)=>{
     if(!next.streamUrls.length){setStatus("unavailable");return;}
     if(current.current?.id===next.id){
-      if(status==="playing"){audio.current?.pause();setStatus("paused");return;}
+      if(status==="playing"){if(native)void nativeRadio.pause();else audio.current?.pause();setStatus("paused");return;}
       void startSource.current(sourceIndex.current);return;
     }
     stopTimers();current.current=next;sourceIndex.current=0;attempts.current=0;
     setStation(next);setStatus("loading");void startSource.current(0);
-    if("mediaSession" in navigator){
+    if(!native && "mediaSession" in navigator){
       navigator.mediaSession.metadata=new MediaMetadata({title:next.name,artist:"REDIO HUB EA",album:"Live Radio",artwork:next.logo?[{src:next.logo}]:[]});
     }
-  },[status,stopTimers]);
-  const pause=useCallback(()=>{audio.current?.pause();setStatus("paused");if(retry.current){clearTimeout(retry.current);retry.current=null;}},[]);
+  },[status,stopTimers,native]);
+  const pause=useCallback(()=>{if(native)void nativeRadio.pause();else audio.current?.pause();setStatus("paused");if(retry.current){clearTimeout(retry.current);retry.current=null;}},[native]);
   const resume=useCallback(()=>{if(current.current)void startSource.current(sourceIndex.current);},[]);
-  const setPlayerVolume=useCallback((v:number)=>{const safe=Math.max(0,Math.min(1,v));setVolume(safe);if(audio.current)audio.current.volume=safe;},[]);
+  const setPlayerVolume=useCallback((v:number)=>{const safe=Math.max(0,Math.min(1,v));setVolume(safe);if(native)void nativeRadio.setVolume(safe);else if(audio.current)audio.current.volume=safe;},[native]);
   const setTimer=useCallback((minutes:number)=>{
     if(sleep.current)clearTimeout(sleep.current);
     sleep.current=null;setSleepMinutes(minutes);
+    if(native){void nativeRadio.setSleepTimer(minutes);return;}
     if(minutes>0)sleep.current=setTimeout(()=>{pause();setSleepMinutes(0);},minutes*60000);
-  },[pause]);
+  },[pause,native]);
   useEffect(()=>{
+    if(native)return;
     const el=new Audio();el.preload="none";el.volume=volume;audio.current=el;
     const onError=()=>{if(current.current)recover();};
     const onPlaying=()=>setStatus("playing");
@@ -111,6 +120,6 @@ export function useRadioPlayer() {
     };
   // A single audio engine must survive UI tab switches.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
+  },[native]);
   return {station,status,volume,sleepMinutes,expanded,setExpanded,play,pause,resume,stop,setPlayerVolume,setTimer,nextSource:()=>void startSource.current(sourceIndex.current+1<(current.current?.streamUrls.length??0)?sourceIndex.current+1:0)};
 }
