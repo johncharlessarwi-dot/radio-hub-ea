@@ -30,3 +30,7 @@
 :root[data-theme="light"] .video-card,:root[data-theme="light"] .video-active{background:#fff;color:#142038}
 :root[data-theme="light"] .video-intro,:root[data-theme="light"] .video-card p{color:#53647a}
 @media(max-width:700px){.video-filters{max-width:none}.video-grid{grid-template-columns:1fr}.video-active{padding:10px}.video-card-symbol{aspect-ratio:16/7}}
+
+.install-app{display:flex;align-items:center;gap:7px;background:linear-gradient(105deg,#00d5ff,#8ca0ff);color:#061221;border:0;padding:10px 14px;border-radius:12px;font-weight:800;font-size:12px;min-height:40px}
+.install-app:focus-visible{outline:2px solid #fff;outline-offset:3px}
+@media(max-width:480px){.install-app span{display:none}.install-app{padding:10px}}
