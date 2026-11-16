@@ -44,7 +44,7 @@ export function useRadioPlayer() {
   },[]);
   const start=useCallback(async(index:number)=>{
     const s=current.current,el=audio.current;
-    if(!el||!s||!s.streamUrls[index]){setStatus("unavailable");return;}
+    if((!native&&!el)||!s||!s.streamUrls[index]){setStatus("unavailable");return;}
     if(retry.current){clearTimeout(retry.current);retry.current=null;}
     cleanSource();sourceIndex.current=index;setStatus("loading");
     const url=s.streamUrls[index];
@@ -54,7 +54,7 @@ export function useRadioPlayer() {
         if(current.current===s&&sourceIndex.current===index){attempts.current=0;setStatus("playing");}
         return;
       }
-      if(/\.m3u8(?:[?#]|$)/i.test(url)&&!el.canPlayType("application/vnd.apple.mpegurl")){
+      if(/\.m3u8(?:[?#]|$)/i.test(url)&&!el!.canPlayType("application/vnd.apple.mpegurl")){
         const {default:Hls}=await import("hls.js");
         if(current.current!==s||sourceIndex.current!==index)return;
         if(!Hls.isSupported())throw Error("HLS unsupported");
@@ -66,12 +66,12 @@ export function useRadioPlayer() {
           player.on(Hls.Events.ERROR,(_event,data)=>{
             if(data.fatal){clearTimeout(timeout);reject(new Error("HLS media error"));}
           });
-          player.attachMedia(el);
+          player.attachMedia(el!);
           player.loadSource(url);
         });
         player.on(Hls.Events.ERROR,(_event,data)=>{if(data.fatal)recover();});
-      }else{el.src=url;}
-      await el.play();
+      }else{el!.src=url;}
+      await el!.play();
       if(current.current!==s||sourceIndex.current!==index)return;
       attempts.current=0;setStatus("playing");
     }catch{
