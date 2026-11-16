@@ -76,6 +76,7 @@ public class RadioPlaybackService extends MediaSessionService {
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
+    super.onStartCommand(intent, flags, startId);
     if (intent == null || intent.getAction() == null) return START_NOT_STICKY;
     switch (intent.getAction()) {
       case ACTION_PLAY: {
@@ -103,7 +104,7 @@ public class RadioPlaybackService extends MediaSessionService {
           MediaItem item = new MediaItem.Builder()
             .setUri(url)
             .setMediaMetadata(new MediaMetadata.Builder()
-              .setTitle(title).setArtist("REDIO HUB EA").setIsPlayable(true).build())
+              .setTitle(title).setArtist("REDIO HUB EA").build())
             .build();
           player.setMediaItem(item);
           player.prepare();
