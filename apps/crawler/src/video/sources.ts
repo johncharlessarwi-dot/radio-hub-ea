@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { safePublicHttpUrl } from "../parsers/streams.js";
 
 // A video source must be an approved broadcaster link; never accept player HTML.
 export const videoSourceSchema=z.object({
@@ -16,7 +17,7 @@ export const videoSourceSchema=z.object({
   let source:URL,official:URL;
   try {source=new URL(item.sourceUrl);official=new URL(item.officialWebsite);}
   catch {ctx.addIssue({code:"custom",message:"Invalid URL"});return;}
-  if(source.protocol!=="https:"||official.protocol!=="https:"||source.username||source.password||official.username||official.password){
+  if(!safePublicHttpUrl(item.sourceUrl)||!safePublicHttpUrl(item.officialWebsite)||source.protocol!=="https:"||official.protocol!=="https:"||source.username||source.password||official.username||official.password){
     ctx.addIssue({code:"custom",message:"Only HTTPS without embedded credentials is supported"});return;
   }
   if(item.type==="youtube"){
