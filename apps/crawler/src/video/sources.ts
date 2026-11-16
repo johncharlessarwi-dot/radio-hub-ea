@@ -20,6 +20,7 @@ export const videoSourceSchema=z.object({
   if(!safePublicHttpUrl(item.sourceUrl)||!safePublicHttpUrl(item.officialWebsite)||source.protocol!=="https:"||official.protocol!=="https:"||source.username||source.password||official.username||official.password){
     ctx.addIssue({code:"custom",message:"Only HTTPS without embedded credentials is supported"});return;
   }
+  if(source.port||official.port){ctx.addIssue({code:"custom",message:"Media endpoints must use standard HTTPS ports"});return;}
   if(item.type==="youtube"){
     if(source.hostname!=="www.youtube.com"&&source.hostname!=="youtube.com"){
       ctx.addIssue({code:"custom",message:"Official YouTube links only"});return;
