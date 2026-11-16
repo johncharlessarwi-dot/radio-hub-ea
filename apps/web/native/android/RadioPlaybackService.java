@@ -29,6 +29,8 @@ public class RadioPlaybackService extends MediaSessionService {
   private final ArrayList<String> fallbackUrls = new ArrayList<>();
   private int fallbackIndex = 0;
   private int retryCount = 0;
+  private boolean requestedPlay = false;
+  private int playbackGeneration = 0;
 
   @Override public void onCreate() {
     super.onCreate();
@@ -44,6 +46,7 @@ public class RadioPlaybackService extends MediaSessionService {
   }
 
   private void recoverStream() {
+    if (!requestedPlay) return;
     if (fallbackIndex + 1 < fallbackUrls.size()) {
       fallbackIndex++;
       player.setMediaItem(MediaItem.fromUri(fallbackUrls.get(fallbackIndex)));
@@ -53,8 +56,9 @@ public class RadioPlaybackService extends MediaSessionService {
     }
     if (retryCount < 3 && !fallbackUrls.isEmpty()) {
       long delay = 1500L * (1L << retryCount++);
+      final int generation = playbackGeneration;
       timerHandler.postDelayed(() -> {
-        if (!fallbackUrls.isEmpty()) {
+        if (requestedPlay && generation == playbackGeneration && !fallbackUrls.isEmpty()) {
           fallbackIndex = 0;
           player.setMediaItem(MediaItem.fromUri(fallbackUrls.get(0)));
           player.prepare();
@@ -89,7 +93,7 @@ public class RadioPlaybackService extends MediaSessionService {
             }
           } catch (Exception ignored) { /* Primary verified URL remains */ }
         }
-        fallbackIndex=0;retryCount=0;
+        fallbackIndex=0;retryCount=0;requestedPlay=true;playbackGeneration++;
         String title = intent.getStringExtra("title");
         if (title == null || title.isEmpty()) title = "REDIO HUB EA";
         String current = player.getCurrentMediaItem() == null ? "" :
@@ -108,6 +112,7 @@ public class RadioPlaybackService extends MediaSessionService {
         break;
       }
       case ACTION_PAUSE:
+        requestedPlay=false;playbackGeneration++;
         player.pause();
         break;
       case ACTION_VOLUME:
@@ -117,12 +122,13 @@ public class RadioPlaybackService extends MediaSessionService {
         clearSleep();
         long ms = intent.getLongExtra("durationMs", 0L);
         if (ms > 0 && ms <= 24L * 60 * 60 * 1000) {
-          sleepTask = () -> { player.pause(); sleepTask = null; };
+          sleepTask = () -> { requestedPlay=false;playbackGeneration++;player.pause(); sleepTask = null; };
           timerHandler.postDelayed(sleepTask, ms);
         }
         break;
       }
       case ACTION_STOP:
+        requestedPlay=false;playbackGeneration++;
         clearSleep();
         player.stop();
         player.clearMediaItems();
