@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AlertTriangle, ExternalLink, Play, RadioTower, RefreshCw, Tv, X } from "lucide-react";
 import type { TranslationKey } from "../../i18n/translations";
 import { isSafeVideoSource, youtubeEmbedUrl, type VideoSource } from "./sources";
@@ -38,6 +38,7 @@ export function VideoTab({apiBase,tr,onVideoStart}:Props){
  const [country,setCountry]=useState("");
  const [active,setActive]=useState<string|null>(null);
  const [playbackError,setPlaybackError]=useState(false);
+ const handleVideoError=useCallback(()=>setPlaybackError(true),[]);
  const [refresh,setRefresh]=useState(0);
  useEffect(()=>{
   const controller=new AbortController();
@@ -67,7 +68,7 @@ export function VideoTab({apiBase,tr,onVideoStart}:Props){
     <div className="video-active-header"><strong>{playing.title}</strong><button className="icon-control" aria-label={tr("close")} onClick={()=>setActive(null)}><X size={19}/></button></div>
     {playbackError?<div className="empty-state"><AlertTriangle size={30}/><p>{tr("videoBlocked")}</p><a className="official-link" href={playing.officialWebsite} target="_blank" rel="noopener noreferrer"><ExternalLink size={16}/>{tr("officialSite")}</a></div>:
     playing.type==="youtube"?<iframe className="broadcast-video" title={playing.title} src={youtubeEmbedUrl(playing.sourceUrl)??undefined} loading="lazy" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-presentation allow-popups" />:
-    <HlsVideo url={playing.sourceUrl} onError={()=>setPlaybackError(true)}/>}
+    <HlsVideo url={playing.sourceUrl} onError={handleVideoError}/>}
     <p className="video-attribution">{playing.broadcaster} · {playing.attribution}</p>
     <a className="official-link" href={playing.officialWebsite} target="_blank" rel="noopener noreferrer"><ExternalLink size={16}/>{tr("officialSite")}</a>
    </div>}
