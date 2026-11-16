@@ -35,3 +35,9 @@ The Capacitor config exists, but a working background-playback service, Android 
 ## Legal / Sheria
 
 All station broadcasts belong to their respective publishers. See [LEGAL.md](LEGAL.md). Submit station corrections or removal requests via GitHub Issues.
+
+## Phase 4 — Official video / TV na video rasmi
+
+The Video tab now includes a source-approved catalogue, official YouTube iframe playback, HTTPS HLS video support, broadcaster attribution, and links to original sources. Audio playback is paused when video starts. No broadcast URLs have been invented and the initial video directory is empty until operator review.
+
+See [Phase 4 Video Guide](docs/PHASE4_VIDEO.md) for metadata import and validation. **CI green, real-device playback, signed Android APK and production release are not yet verified.**
