@@ -19,4 +19,5 @@ describe("public stream discovery", () => {
     expect(safePublicHttpUrl("javascript:alert(1)")).toBeNull();
     expect(safePublicHttpUrl("http://localhost:8080")).toBeNull();
   });
+  it("rejects URLs beyond the accepted 2048-byte limit",()=>{expect(safePublicHttpUrl("https://example.org/"+ "x".repeat(2200))).toBeNull();});
 });
