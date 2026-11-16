@@ -44,7 +44,7 @@ export async function createApp(db:RadioDb=openDatabase()) {
     return reply.code(202).send({status:"received"});
   });
   app.get("/videos",async(request,reply)=>{
-    const query=z.object({country:z.enum(["TZ","KE","UG","RW","BI"]).optional()}).safeParse(request.query);
+    const query=z.object({country:z.enum(["TZ","KE","UG","RW","BI"]).optional()}).strict().safeParse(request.query);
     if(!query.success)return reply.code(400).send({error:"invalid_query"});
     const params=query.data.country?[query.data.country]:[];
     const rows=db.prepare(`SELECT id,title,broadcaster,country,source_url AS sourceUrl,type,official_website AS officialWebsite,attribution,verified_at AS verifiedAt
