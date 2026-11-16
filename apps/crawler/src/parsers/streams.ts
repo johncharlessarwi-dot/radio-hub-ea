@@ -9,6 +9,7 @@ export function safePublicHttpUrl(raw: string, base?: string): string | null {
     if (raw.length > 2048) return null;
     const url = new URL(raw.trim(), base);
     if (!["http:", "https:"].includes(url.protocol) || url.username || url.password || /%40/i.test(url.host)) return null;
+    if (/^\d+$/i.test(url.hostname) || /^0x[0-9a-f]+$/i.test(url.hostname)) return null;
     if (!url.hostname || /^(localhost|.*\.localhost|.*\.local)$/i.test(url.hostname)) return null;
     if (/^(?:127\.|10\.|0\.|169\.254\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.)/.test(url.hostname)) return null;
     if (url.hostname === "[::1]" || url.hostname === "[::]") return null;
