@@ -50,7 +50,7 @@ export function useRadioPlayer() {
     const url=s.streamUrls[index];
     try{
       if(native){
-        await nativeRadio.play(url,s.name);
+        await nativeRadio.play(url,s.name,s.streamUrls);
         if(current.current===s&&sourceIndex.current===index){attempts.current=0;setStatus("playing");}
         return;
       }
