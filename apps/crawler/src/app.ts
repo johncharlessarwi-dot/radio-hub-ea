@@ -14,6 +14,7 @@ export async function createApp(db:RadioDb=openDatabase()) {
     reply.header("X-Frame-Options","DENY");
     reply.header("Cache-Control","no-store");
     reply.header("Referrer-Policy","no-referrer");
+    reply.header("Permissions-Policy","camera=(), microphone=(), geolocation=()");
     return payload;
   });
   seedDatabase(db,loadSeedData());
