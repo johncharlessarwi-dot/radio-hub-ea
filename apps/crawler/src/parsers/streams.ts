@@ -6,6 +6,7 @@ const MEDIA = /\.(?:mp3|aac|ogg|opus)(?:[?#]|$)/i;
 const MAX_PLAYLIST_LINES = 300;
 export function safePublicHttpUrl(raw: string, base?: string): string | null {
   try {
+    if (raw.length > 2048) return null;
     const url = new URL(raw.trim(), base);
     if (!["http:", "https:"].includes(url.protocol) || url.username || url.password) return null;
     if (!url.hostname || /^(localhost|.*\.localhost|.*\.local)$/i.test(url.hostname)) return null;
