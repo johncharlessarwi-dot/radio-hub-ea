@@ -1,6 +1,5 @@
 import {describe,expect,it,vi} from "vitest";
-const play=vi.fn(async()=>{});
-const pause=vi.fn(async()=>{});
+const {play,pause}=vi.hoisted(()=>({play:vi.fn(async()=>{}),pause:vi.fn(async()=>{})}));
 vi.mock("@capacitor/core",()=>({
   Capacitor:{getPlatform:()=>"android",isNativePlatform:()=>true},
   registerPlugin:()=>({play,pause,stop:vi.fn(),setVolume:vi.fn(),setSleepTimer:vi.fn()})
