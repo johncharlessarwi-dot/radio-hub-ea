@@ -11,7 +11,7 @@ export function startJobs(db:RadioDb){
     if(checking)return;
     checking=true;
     try{
-      const approved=db.prepare("SELECT id,url FROM station_streams WHERE approved=1").all() as Array<{id:number;url:string}>;
+      const approved=db.prepare("SELECT id,url FROM station_streams WHERE approved=1 ORDER BY last_checked_at ASC LIMIT 100").all() as Array<{id:number;url:string}>;
       for(const row of approved){
         try{recordHealth(db,row.id,await checkStream(row.url));}
         catch(error){console.error("Health probe failed",row.id,error);}
