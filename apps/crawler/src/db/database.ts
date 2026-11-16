@@ -9,6 +9,7 @@ export function openDatabase(dbPath=process.env.DB_PATH??resolve(process.cwd(),"
   if(dbPath!==":memory:") mkdirSync(dirname(dbPath),{recursive:true});
   const db=new Database(dbPath);
   db.pragma("journal_mode = WAL");
+  db.pragma("busy_timeout = 3000");
   db.pragma("foreign_keys = ON");
   db.pragma("trusted_schema = OFF");
   db.exec(`
