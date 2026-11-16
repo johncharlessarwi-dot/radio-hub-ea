@@ -60,6 +60,8 @@ export function robotsAllows(content:string,path:string,userAgent="redio-hub-ea"
   return matching[0]?.allow??true;
 }
 async function cappedText(response:Response):Promise<string> {
+  const declared=Number(response.headers.get("content-length")??0);
+  if(Number.isFinite(declared)&&declared>MAX_HTML)throw Error("Page exceeds size limit");
   if(!response.body)return "";
   const reader=response.body.getReader();const chunks:Uint8Array[]=[];let length=0;
   try{
