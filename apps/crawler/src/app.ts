@@ -1,10 +1,12 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
+import rateLimit from "@fastify/rate-limit";
 import { z } from "zod";
 import { openDatabase, seedDatabase, loadSeedData, listStations, type RadioDb } from "./db/database.js";
 
 export async function createApp(db:RadioDb=openDatabase()) {
   const app=Fastify({logger:false,bodyLimit:8192});
+  await app.register(rateLimit,{max:60,timeWindow:"1 minute",errorResponseBuilder:()=>({error:"rate_limited"})});
   await app.register(cors,{origin:process.env.WEB_ORIGIN?.split(",")??["http://localhost:5173"]});
   seedDatabase(db,loadSeedData());
   app.get("/health",async()=>({status:"ok",service:"redio-crawler",database:"connected"}));
