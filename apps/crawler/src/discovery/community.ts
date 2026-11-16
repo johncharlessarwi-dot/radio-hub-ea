@@ -9,8 +9,8 @@ const Entry=z.object({
   countrycode:Country,
   url_resolved:z.string().optional().nullable(),
   url:z.string().optional().nullable(),
-  homepage:z.string().optional().nullable(),
-  favicon:z.string().optional().nullable(),
+  homepage:z.string().max(2048).optional().nullable(),
+  favicon:z.string().max(2048).optional().nullable(),
   tags:z.string().max(1024).optional().nullable(),
   language:z.string().max(256).optional().nullable(),
 });
