@@ -73,6 +73,7 @@ async function cappedText(response:Response):Promise<string> {
 }
 export async function crawlPublicStation(db:RadioDb,stationId:string,website:string,fetcher:typeof fetch=fetch){
   const url=await validateCrawlerTarget(website);
+  if(!url.startsWith("https://"))throw Error("Official crawler requires HTTPS");
   const robotUrl=new URL("/robots.txt",url).href;
   const robotResponse=await throttledFetch(robotUrl,fetcher);
   if(robotResponse.status!==404&&!robotResponse.ok)throw Error("Could not verify robots.txt");
