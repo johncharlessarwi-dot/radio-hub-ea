@@ -2,6 +2,7 @@ import Fastify from "fastify";
 import cors from "@fastify/cors";
 import rateLimit from "@fastify/rate-limit";
 import { z } from "zod";
+import { videoSourceSchema } from "./video/sources.js";
 import { openDatabase, seedDatabase, loadSeedData, listStations, type RadioDb } from "./db/database.js";
 
 export async function createApp(db:RadioDb=openDatabase()) {
@@ -46,7 +47,8 @@ export async function createApp(db:RadioDb=openDatabase()) {
     const params=query.data.country?[query.data.country]:[];
     const rows=db.prepare(`SELECT id,title,broadcaster,country,source_url AS sourceUrl,type,official_website AS officialWebsite,attribution,verified_at AS verifiedAt
       FROM video_sources WHERE approved=1 AND verified_at IS NOT NULL${query.data.country?" AND country=?":""} ORDER BY title`).all(...params);
-    return {videos:rows};
+    const videos=(rows as Array<Record<string,unknown>>).filter(row=>videoSourceSchema.safeParse({...row,approved:true}).success);
+    return {videos};
   });
   app.addHook("onClose",async()=>db.close());
   return app;
