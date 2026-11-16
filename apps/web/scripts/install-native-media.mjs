@@ -1,9 +1,9 @@
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync } from "node:fs";
-import { join, dirname } from "node:path";
+import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const webRoot = dirname(dirname(fileURLToPath(import.meta.url)));
-const androidRoot = join(webRoot,"android");
+const androidRoot = process.env.REDIO_ANDROID_PROJECT_DIR ? resolve(process.env.REDIO_ANDROID_PROJECT_DIR) : join(webRoot,"android");
 const javaRoot = join(androidRoot,"app/src/main/java/app/rediohubea/mobile");
 const manifestPath = join(androidRoot,"app/src/main/AndroidManifest.xml");
 const gradlePath = join(androidRoot,"app/build.gradle");
