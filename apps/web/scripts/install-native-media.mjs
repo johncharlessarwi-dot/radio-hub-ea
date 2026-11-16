@@ -37,7 +37,7 @@ if(!manifest.includes('android:name=".RadioPlaybackService"')){
         <service
             android:name=".RadioPlaybackService"
             android:foregroundServiceType="mediaPlayback"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="androidx.media3.session.MediaSessionService" />
             </intent-filter>
