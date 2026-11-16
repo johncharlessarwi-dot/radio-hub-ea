@@ -17,6 +17,8 @@ function privateAddress(address:string):boolean {
 }
 export async function validateCrawlerTarget(url:string) {
   const canonical=safePublicHttpUrl(url);
+  const allowlist=(process.env.CRAWL_ALLOWED_HOSTS??"").split(",").map(h=>h.trim().toLowerCase()).filter(Boolean);
+  if(allowlist.length===0||!canonical||!allowlist.includes(new URL(canonical).hostname.toLowerCase()))throw Error("Crawler host not approved");
   if(!canonical)throw Error("Disallowed URL");
   const host=new URL(canonical).hostname;
   const addresses=await lookup(host,{all:true});
