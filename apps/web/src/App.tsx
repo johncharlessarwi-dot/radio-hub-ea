@@ -3,6 +3,7 @@ import { Radio, Tv, Heart, Search, WifiOff, Play, Pause, Volume2, Moon, Sun, Clo
 import type { Station } from "./features/radio/types";
 import { useRadioPlayer } from "./features/radio/useRadioPlayer";
 import { StationCard } from "./components/StationCard";
+import { VideoTab } from "./features/video/VideoTab";
 import { readJson, saveJson, toggleId, pushRecent } from "./features/radio/preferences";
 import { t, type Language } from "./i18n/translations";
 
@@ -106,7 +107,7 @@ export default function App() {
          apiError?<div className="empty-state"><WifiOff size={36}/><p>{tr("apiError")}</p><button className="primary-button" onClick={()=>void reload()}>{tr("retry")}</button></div>:
          displayed.length===0?<div className="empty-state"><Radio size={39}/><p>{tr("none")}</p></div>:
          <div className="station-grid">{displayed.map(s=><StationCard key={s.id} station={s} selected={player.station?.id===s.id} playing={player.status==="playing"} favourite={favourites.includes(s.id)} tr={tr} onListen={listen} onToggle={id=>setFavourites(ids=>toggleId(ids,id))}/>)}</div>}
-      </>:<div className="empty-state video-placeholder"><Tv size={42}/><h2>{tr("video")}</h2><p>{tr("videoSoon")}</p></div>}
+      </>:<VideoTab apiBase={API} tr={tr} onVideoStart={player.pause}/>}
       <footer>© REDIO HUB EA · {tr("footer")}</footer>
     </main>
     {player.station&&<div className={"player-bar"+(player.expanded?" expanded":"")} role="region" aria-label="Radio player">
