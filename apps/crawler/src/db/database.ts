@@ -10,6 +10,7 @@ export function openDatabase(dbPath=process.env.DB_PATH??resolve(process.cwd(),"
   const db=new Database(dbPath);
   db.pragma("journal_mode = WAL");
   db.pragma("foreign_keys = ON");
+  db.pragma("trusted_schema = OFF");
   db.exec(`
     CREATE TABLE IF NOT EXISTS stations (
       id TEXT PRIMARY KEY,
