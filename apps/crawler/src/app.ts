@@ -34,6 +34,7 @@ export async function createApp(db:RadioDb=openDatabase()) {
   app.post("/reports",{config:{rateLimit:{max:5,timeWindow:"1 minute"}}},async(request,reply)=>{
     const parsed=z.object({stationId:z.string().regex(/^[a-z0-9-]{1,80}$/),detail:z.string().trim().min(1).max(500).optional()}).strict().safeParse(request.body);
     if(!parsed.success)return reply.code(400).send({error:"invalid_report"});
+    if(parsed.data.detail && /[\u0000-\u001f\u007f]/.test(parsed.data.detail))return reply.code(400).send({error:"invalid_report"});
     const exists=db.prepare("SELECT id FROM stations WHERE id=?").get(parsed.data.stationId);
     if(!exists)return reply.code(404).send({error:"station_not_found"});
     db.prepare("INSERT INTO user_reports(station_id,detail) VALUES (?,?)").run(parsed.data.stationId,parsed.data.detail??null);
