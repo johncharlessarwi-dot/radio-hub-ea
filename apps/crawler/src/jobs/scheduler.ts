@@ -22,7 +22,7 @@ export function startJobs(db:RadioDb){
     if(crawling||process.env.CRAWL_ENABLED!=="true")return;
     crawling=true;
     try{
-      const websites=db.prepare("SELECT id,website FROM stations WHERE source='official' AND website IS NOT NULL").all() as Array<{id:string;website:string}>;
+      const websites=db.prepare("SELECT id,website FROM stations WHERE source='official' AND website IS NOT NULL ORDER BY id LIMIT 50").all() as Array<{id:string;website:string}>;
       for(const station of websites){
         try{await crawlPublicStation(db,station.id,station.website);}
         catch(error){console.error("Public crawl failed",station.id,error);}
