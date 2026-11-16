@@ -3,6 +3,7 @@ import { Radio, Tv, Heart, Search, WifiOff, Play, Pause, Volume2, Moon, Sun, Clo
 import type { Station } from "./features/radio/types";
 import { useRadioPlayer } from "./features/radio/useRadioPlayer";
 import { StationCard } from "./components/StationCard";
+import { InstallApp } from "./components/InstallApp";
 import { VideoTab } from "./features/video/VideoTab";
 import { readJson, saveJson, toggleId, pushRecent } from "./features/radio/preferences";
 import { t, type Language } from "./i18n/translations";
@@ -83,7 +84,7 @@ export default function App() {
   return <div className="app-shell">
     <header className="topbar">
       <div className="brand"><span className="brand-icon"><Radio size={23}/></span><div><strong>REDIO HUB <em>EA</em></strong><small>{tr("tagline")}</small></div></div>
-      <div className="top-actions">
+      <div className="top-actions"><InstallApp language={language}/>
         <button className="text-control" onClick={()=>setLanguage(l=>l==="sw"?"en":"sw")} aria-label="Language"><Globe2 size={17}/>{language==="sw"?"EN":"SW"}</button>
         <button className="icon-control" onClick={()=>setTheme(v=>v==="dark"?"light":"dark")} aria-label={theme==="dark"?tr("light"):tr("dark")}>{theme==="dark"?<Sun size={19}/>:<Moon size={19}/>}</button>
       </div>
