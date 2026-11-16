@@ -11,8 +11,8 @@ const Entry=z.object({
   url:z.string().optional().nullable(),
   homepage:z.string().optional().nullable(),
   favicon:z.string().optional().nullable(),
-  tags:z.string().optional().nullable(),
-  language:z.string().optional().nullable(),
+  tags:z.string().max(1024).optional().nullable(),
+  language:z.string().max(256).optional().nullable(),
 });
 export type CommunityStation=z.infer<typeof Entry>;
 
