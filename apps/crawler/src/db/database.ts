@@ -41,6 +41,15 @@ export function openDatabase(dbPath=process.env.DB_PATH??resolve(process.cwd(),"
     CREATE TABLE IF NOT EXISTS video_sources (id TEXT PRIMARY KEY, title TEXT NOT NULL, broadcaster TEXT NOT NULL, source_url TEXT NOT NULL, type TEXT NOT NULL, attribution TEXT, approved INTEGER NOT NULL DEFAULT 0);
     CREATE TABLE IF NOT EXISTS user_reports (id INTEGER PRIMARY KEY AUTOINCREMENT, station_id TEXT NOT NULL, detail TEXT, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
   `);
+  const videoColumns=db.pragma("table_info(video_sources)") as Array<{name:string}>;
+  const existing=new Set(videoColumns.map(c=>c.name));
+  for(const [column,definition] of Object.entries({
+    country:"TEXT NOT NULL DEFAULT 'TZ'",
+    official_website:"TEXT",
+    verified_at:"TEXT"
+  })){
+    if(!existing.has(column))db.exec(`ALTER TABLE video_sources ADD COLUMN ${column} ${definition}`);
+  }
   return db;
 }
 export type RadioDb=ReturnType<typeof openDatabase>;
