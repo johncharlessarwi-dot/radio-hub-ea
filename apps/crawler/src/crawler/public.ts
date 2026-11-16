@@ -81,6 +81,7 @@ export async function crawlPublicStation(db:RadioDb,stationId:string,website:str
   if(!robotsAllows(robots,new URL(url).pathname))return {discovered:0,blocked:true};
   const page=await throttledFetch(url,fetcher);
   if(!page.ok||!/(text\/html|application\/xhtml\+xml)/i.test(page.headers.get("content-type")??""))throw Error("Not a public HTML page");
+  if(page.redirected)throw Error("Redirected pages are not permitted");
   const candidateUrls=parsePublicStreams(await cappedText(page),url).slice(0,50);
   const insert=db.prepare("INSERT OR IGNORE INTO station_streams(station_id,url,approved,provenance) VALUES (?,?,0,?)");
   db.transaction(()=>{for(const stream of candidateUrls)insert.run(stationId,stream,url)})();
