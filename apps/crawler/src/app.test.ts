@@ -26,4 +26,5 @@ describe("Fastify API",()=>{
     expect((await app.inject("/videos?country=BAD")).statusCode).toBe(400);
     await app.close();
   });
+  it("adds no-store and content-type protection headers",async()=>{const app=await createApp(openDatabase(":memory:"));const response=await app.inject("/health");expect(response.headers["x-content-type-options"]).toBe("nosniff");expect(response.headers["cache-control"]).toBe("no-store");await app.close();});
 });
