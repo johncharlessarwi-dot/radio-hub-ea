@@ -10,8 +10,9 @@
     "test": "vitest run",
     "lint": "eslint src --max-warnings=0",
     "icons": "node scripts/generate-icons.mjs",
-    "android:init": "npm run build && cap add android",
-    "android:sync": "npm run build && cap sync android"
+    "android:init": "npm run build && cap add android && cap sync android && npm run android:native",
+    "android:sync": "npm run build && cap sync android && npm run android:native",
+    "android:native": "node scripts/install-native-media.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^7.0.0",
