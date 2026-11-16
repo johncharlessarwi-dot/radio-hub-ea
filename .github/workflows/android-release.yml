@@ -58,6 +58,7 @@ jobs:
           cd apps/web
           npx cap add android
           npx cap sync android
+          npm run android:native
       - name: Compile unsigned release APK
         working-directory: apps/web/android
         run: |
