@@ -58,7 +58,11 @@ export async function fetchCommunityStations(country:"TZ"|"KE"|"UG"|"RW"|"BI",fe
       const url=mirror+"/json/stations/bycountrycodeexact/"+country+"?limit=100&hidebroken=true";
       const response=await fetcher(url,{headers:{"User-Agent":"REDIO-HUB-EA/0.1 (+https://github.com/johncharlessarwi-dot/radio-hub-ea)","Accept":"application/json"},redirect:"error",signal:AbortSignal.timeout(10000)});
       if(!response.ok)continue;
-      const json:unknown=await response.json();
+      const length=Number(response.headers.get("content-length")??0);
+      if(length>1_000_000)throw Error("Community response too large");
+      const bytes=await response.arrayBuffer();
+      if(bytes.byteLength>1_000_000)throw Error("Community response exceeds limit");
+      const json:unknown=JSON.parse(new TextDecoder().decode(bytes));
       if(!Array.isArray(json)||json.length>100)throw Error("Invalid community response");
       return json;
     }catch{ /* try another fixed mirror */ }
