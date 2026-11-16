@@ -6,7 +6,7 @@ import { videoSourceSchema } from "./video/sources.js";
 import { openDatabase, seedDatabase, loadSeedData, listStations, type RadioDb } from "./db/database.js";
 
 export async function createApp(db:RadioDb=openDatabase()) {
-  const app=Fastify({logger:false,bodyLimit:8192});
+  const app=Fastify({logger:false,bodyLimit:8192,connectionTimeout:10000,requestTimeout:15000,keepAliveTimeout:5000});
   await app.register(rateLimit,{max:60,timeWindow:"1 minute",errorResponseBuilder:()=>({error:"rate_limited"})});
   await app.register(cors,{origin:(process.env.WEB_ORIGIN?.split(",").map(v=>v.trim()).filter(v=>/^https:\/\/[^/]+$/.test(v))??(process.env.NODE_ENV==="production"?[]:["http://localhost:5173"]))});
   app.addHook("onSend",async(_request,reply,payload)=>{
