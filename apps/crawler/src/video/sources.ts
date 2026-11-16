@@ -1,0 +1,44 @@
+import { z } from "zod";
+
+// A video source must be an approved broadcaster link; never accept player HTML.
+export const videoSourceSchema=z.object({
+  id:z.string().regex(/^[a-z0-9-]{1,80}$/),
+  title:z.string().trim().min(1).max(180),
+  broadcaster:z.string().trim().min(1).max(180),
+  country:z.enum(["TZ","KE","UG","RW","BI"]),
+  type:z.enum(["youtube","hls"]),
+  sourceUrl:z.string().url().max(2048),
+  officialWebsite:z.string().url().max(2048),
+  attribution:z.string().trim().min(1).max(500),
+  verifiedAt:z.string().datetime(),
+  approved:z.boolean().default(false)
+}).superRefine((item,ctx)=>{
+  let source:URL,official:URL;
+  try {source=new URL(item.sourceUrl);official=new URL(item.officialWebsite);}
+  catch {ctx.addIssue({code:"custom",message:"Invalid URL"});return;}
+  if(source.protocol!=="https:"||official.protocol!=="https:"||source.username||source.password||official.username||official.password){
+    ctx.addIssue({code:"custom",message:"Only HTTPS without embedded credentials is supported"});return;
+  }
+  if(item.type==="youtube"){
+    if(source.hostname!=="www.youtube.com"&&source.hostname!=="youtube.com"){
+      ctx.addIssue({code:"custom",message:"Official YouTube links only"});return;
+    }
+    const id=source.pathname.match(/^\/(?:embed|live|watch)\/([A-Za-z0-9_-]{11})$/)?.[1]
+      ??(source.pathname==="/watch"?source.searchParams.get("v"):null);
+    if(!id||!/^[A-Za-z0-9_-]{11}$/.test(id)){
+      ctx.addIssue({code:"custom",message:"Must refer to an exact YouTube video or live broadcast ID"});
+    }
+  }else if(!/\.m3u8(?:$|[?#])/i.test(source.href)){
+    ctx.addIssue({code:"custom",message:"HLS video must reference an explicit .m3u8 manifest"});
+  }
+});
+export type VideoSource=z.infer<typeof videoSourceSchema>;
+
+export function youtubeEmbedUrl(sourceUrl:string):string|null{
+  try{
+    const u=new URL(sourceUrl);
+    if(u.protocol!=="https:"||!["youtube.com","www.youtube.com"].includes(u.hostname))return null;
+    const id=u.pathname.match(/^\/(?:embed|live)\/([A-Za-z0-9_-]{11})$/)?.[1]??(u.pathname==="/watch"?u.searchParams.get("v"):null);
+    return id&&/^[A-Za-z0-9_-]{11}$/.test(id)?`https://www.youtube-nocookie.com/embed/${id}`:null;
+  }catch{return null;}
+}
