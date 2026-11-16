@@ -2,11 +2,11 @@
 import {describe,it,expect} from "vitest";
 import {mkdtempSync,mkdirSync,writeFileSync,readFileSync,rmSync} from "node:fs";
 import {tmpdir} from "node:os";
-import {join,resolve} from "node:path";
+import {join} from "node:path";
+import {fileURLToPath} from "node:url";
 import {execFileSync} from "node:child_process";
 
-const root=resolve(process.cwd(),"apps/web");
-const installer=join(root,"scripts/install-native-media.mjs");
+const installer=fileURLToPath(new URL("../../../scripts/install-native-media.mjs",import.meta.url));
 function fixture(){
  const dir=mkdtempSync(join(tmpdir(),"redio-android-"));
  const java=join(dir,"app/src/main/java/app/rediohubea/mobile");
