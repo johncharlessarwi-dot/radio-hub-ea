@@ -11,6 +11,7 @@ export async function createApp(db:RadioDb=openDatabase()) {
   await app.register(cors,{origin:(process.env.WEB_ORIGIN?.split(",").map(v=>v.trim()).filter(v=>/^https:\/\/[^/]+$/.test(v))??(process.env.NODE_ENV==="production"?[]:["http://localhost:5173"]))});
   app.addHook("onSend",async(_request,reply,payload)=>{
     reply.header("X-Content-Type-Options","nosniff");
+    reply.header("X-Frame-Options","DENY");
     reply.header("Cache-Control","no-store");
     reply.header("Referrer-Policy","no-referrer");
     return payload;
