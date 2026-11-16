@@ -2,4 +2,35 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { VitePWA } from "vite-plugin-pwa";
-export default defineConfig({plugins:[react(),tailwindcss(),VitePWA({registerType:"autoUpdate",manifest:{name:"REDIO HUB EA",short_name:"REDIO HUB",start_url:"/",display:"standalone",background_color:"#080B16",theme_color:"#080B16",lang:"sw",icons:[]},workbox:{navigateFallback:"/index.html",globPatterns:["**/*.{js,css,html,svg,png,ico}"],runtimeCaching:[]}})],server:{port:5173}});
+
+export default defineConfig({
+  plugins:[
+    react(),
+    tailwindcss(),
+    VitePWA({
+      registerType:"autoUpdate",
+      includeAssets:["icon.svg"],
+      manifest:{
+        id:"/",
+        name:"REDIO HUB EA — Redio na Video za Afrika Mashariki",
+        short_name:"REDIO HUB EA",
+        description:"Sikiliza redio na tazama video rasmi za Afrika Mashariki.",
+        start_url:"/",
+        scope:"/",
+        display:"standalone",
+        background_color:"#080B16",
+        theme_color:"#080B16",
+        lang:"sw",
+        icons:[{src:"/icon.svg",sizes:"any",type:"image/svg+xml",purpose:"any"},{src:"/icon.svg",sizes:"any",type:"image/svg+xml",purpose:"maskable"}]
+      },
+      workbox:{
+        navigateFallback:"/index.html",
+        globPatterns:["**/*.{js,css,html,svg,png,ico,woff2}"],
+        maximumFileSizeToCacheInBytes:3_000_000,
+        navigateFallbackDenylist:[/^\/api\//],
+        runtimeCaching:[] // Never cache live streams, HLS segments, YouTube, or API responses.
+      }
+    })
+  ],
+  server:{port:5173}
+});
