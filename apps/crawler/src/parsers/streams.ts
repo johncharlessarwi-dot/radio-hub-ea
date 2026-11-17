@@ -38,7 +38,7 @@ export function parsePublicStreams(html: string, pageUrl: string): string[] {
     const candidate = safePublicHttpUrl(raw.replace(/&amp;/g, "&"));
     if (candidate && (EXTS.test(candidate) || MEDIA.test(candidate) || STREAM.test(candidate))) found.push(candidate);
   }
-  return unique(found);
+  return unique(found).slice(0,100);
 }
 export function parsePlaylist(content: string, playlistUrl: string): string[] {
   const lines = content.split(/\r?\n/).slice(0, MAX_PLAYLIST_LINES);
