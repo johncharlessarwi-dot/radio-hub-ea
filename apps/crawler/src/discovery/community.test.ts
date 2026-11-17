@@ -20,6 +20,7 @@ describe("community station import",()=>{
     db.close();
   });
   it("rejects imports over the 100-record security limit",()=>{const db=openDatabase(":memory:");expect(()=>importCommunityStations(db,Array.from({length:101},()=>entry))).toThrow("exceeds 100");db.close();});
+  it("rejects credential-bearing imported streams",()=>{expect(normalizeCommunityStation({...entry,url_resolved:"https://name:secret@stream.example/live"})).toBeNull();});
   it("does not override seed-owned station identities",()=>{
     const db=openDatabase(":memory:");
     seedDatabase(db,[{id:"test-fm",name:"Test FM",country:"TZ",city:null,frequency:null,language:["sw"],genre:[],logo:null,website:null,streamUrls:[],source:"official"}]);
