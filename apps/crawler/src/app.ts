@@ -12,7 +12,7 @@ export async function createApp(db:RadioDb=openDatabase()) {
   app.addHook("onSend",async(_request,reply,payload)=>{
     reply.header("X-Content-Type-Options","nosniff");
     reply.header("X-Frame-Options","DENY");
-    reply.header("Cache-Control","no-store");
+    reply.header("Cache-Control","private, no-store, max-age=0");
     reply.header("Referrer-Policy","no-referrer");
     reply.header("Permissions-Policy","camera=(), microphone=(), geolocation=()");
     return payload;
