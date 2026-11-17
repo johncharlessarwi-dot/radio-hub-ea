@@ -3,6 +3,7 @@ import {videoSourceSchema,youtubeEmbedUrl,type VideoSource} from "./sources.js";
 const valid:VideoSource={id:"public-live",title:"Public live",broadcaster:"Example",country:"TZ",type:"youtube",sourceUrl:"https://www.youtube.com/watch?v=abcdefghijk",officialWebsite:"https://www.example.org",attribution:"Official channel",verifiedAt:"2026-11-16T00:00:00.000Z",approved:false};
 describe("video source validation",()=>{
  it("accepts a syntactically valid official YouTube link without claiming authorization",()=>{expect(videoSourceSchema.safeParse(valid).success).toBe(true);expect(youtubeEmbedUrl(valid.sourceUrl)).toBe("https://www.youtube-nocookie.com/embed/abcdefghijk");});
+ it("does not embed credential-bearing YouTube URLs",()=>{expect(youtubeEmbedUrl("https://user:pass@www.youtube.com/watch?v=abcdefghijk")).toBeNull();});
  it("rejects alternate lookalike YouTube domains",()=>{expect(videoSourceSchema.safeParse({...valid,sourceUrl:"https://www.youtube.com.evil.test/watch?v=abcdefghijk"}).success).toBe(false);});
  it("rejects non-HTTPS playlists",()=>{expect(videoSourceSchema.safeParse({...valid,type:"hls",sourceUrl:"http://streams.example/live.m3u8"}).success).toBe(false);});
  it("rejects playlist URLs without manifests",()=>{expect(videoSourceSchema.safeParse({...valid,type:"hls",sourceUrl:"https://streams.example/live.mp4"}).success).toBe(false);});
