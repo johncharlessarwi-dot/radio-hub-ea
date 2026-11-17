@@ -25,6 +25,12 @@ describe("stream health checks",()=>{
   it("does not choose restricted fallback streams",()=>{expect(chooseFallback([{url:"a",status:"restricted" as const,priority:1},{url:"b",status:"alive" as const,priority:9}])?.url).toBe("b");});
   it("excludes the failed URL from fallback selection",()=>{expect(chooseFallback([{url:"a",status:"alive" as const,priority:1},{url:"b",status:"alive" as const,priority:2}],"a")?.url).toBe("b");});
   it("returns no fallback when all candidates fail",()=>{expect(chooseFallback([{url:"a",status:"dead" as const,priority:1},{url:"b",status:"unknown" as const,priority:2}])).toBeNull();});
+  it("classifies outbound DNS security denials as restricted",async()=>{
+    const fetcher=vi.fn().mockRejectedValue(new Error("Unsafe DNS destination"));
+    const result=await checkStream("https://radio.example/live",fetcher);
+    expect(result.status).toBe("restricted");
+    expect(result.error).toBe("Unsafe destination");
+  });
   it("selects the highest priority verified fallback",()=>{
     expect(chooseFallback([{url:"first",status:"dead" as const,priority:1},{url:"second",status:"alive" as const,priority:2},{url:"third",status:"alive" as const,priority:3}])?.url).toBe("second");
   });
