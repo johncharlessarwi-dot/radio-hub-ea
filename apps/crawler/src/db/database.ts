@@ -67,7 +67,7 @@ export function loadSeedData():StationSeed[]{
 export function listStations(db:RadioDb, includeUnverified=false) {
   const rows=db.prepare("SELECT * FROM stations ORDER BY name COLLATE NOCASE LIMIT 2000").all() as Array<Record<string,unknown>>;
   return rows.map(r=>{
-    const streams=db.prepare(`SELECT url FROM station_streams WHERE station_id=? AND approved=1 AND status='alive' ORDER BY priority`).all(r.id) as Array<{url:string}>;
+    const streams=db.prepare(`SELECT url FROM station_streams WHERE station_id=? AND approved=1 AND status='alive' ORDER BY priority LIMIT 8`).all(r.id) as Array<{url:string}>;
     return {id:r.id,name:r.name,country:r.country,city:r.city,frequency:r.frequency,language:JSON.parse(r.languages as string),genre:JSON.parse(r.genres as string),logo:r.logo,website:r.website,source:r.source,streamUrls:streams.map(s=>s.url)};
   }).filter(s=>includeUnverified||s.streamUrls.length>0);
 }
