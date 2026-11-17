@@ -41,4 +41,5 @@ describe("public stream discovery", () => {
   it("rejects 6to4 tunnel addresses",()=>expect(safePublicHttpUrl("http://[2002:7f00:1::1]/admin")).toBeNull());
   it("rejects Teredo tunnel addresses",()=>expect(safePublicHttpUrl("http://[2001:0:1::1]/admin")).toBeNull());
   it("rejects deprecated site-local IPv6 addresses",()=>expect(safePublicHttpUrl("https://[fec0::1]/private")).toBeNull());
+  it("rejects IPv6 documentation addresses",()=>expect(safePublicHttpUrl("https://[2001:db8::1]/live")).toBeNull());
 });
