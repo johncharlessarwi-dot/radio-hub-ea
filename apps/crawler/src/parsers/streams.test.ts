@@ -44,4 +44,5 @@ describe("public stream discovery", () => {
   it("rejects IPv6 documentation addresses",()=>expect(safePublicHttpUrl("https://[2001:db8::1]/live")).toBeNull());
   it("rejects onion-only network destinations",()=>expect(safePublicHttpUrl("http://hiddenservice.onion/live")).toBeNull());
   it("rejects reserved invalid DNS names",()=>expect(safePublicHttpUrl("https://fake.invalid/live")).toBeNull());
+  it("rejects special-use test DNS destinations",()=>expect(safePublicHttpUrl("https://server.test/live")).toBeNull());
 });
