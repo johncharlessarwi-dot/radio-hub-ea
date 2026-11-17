@@ -31,4 +31,5 @@ describe("public stream discovery", () => {
   it("rejects LAN DNS hostnames",()=>expect(safePublicHttpUrl("https://radio.lan/live")).toBeNull());
   it("rejects home.arpa network names",()=>expect(safePublicHttpUrl("http://gateway.home.arpa/live")).toBeNull());
   it("rejects trailing-dot localhost aliases",()=>expect(safePublicHttpUrl("http://localhost./admin")).toBeNull());
+  it("rejects trailing-dot local network names",()=>expect(safePublicHttpUrl("https://printer.local./live")).toBeNull());
 });
