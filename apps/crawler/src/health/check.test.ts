@@ -19,6 +19,7 @@ describe("stream health checks",()=>{
     expect(fetcher).not.toHaveBeenCalled();
   });
   it("restricts redirect responses without fetching redirected targets",async()=>{const fetcher=vi.fn().mockResolvedValue(new Response(null,{status:302,headers:{location:"http://127.0.0.1/internal"}}));expect((await checkStream("https://radio.example/live",fetcher)).status).toBe("restricted");expect(fetcher).toHaveBeenCalledTimes(1);});
+  it("classifies access forbidden as restricted",async()=>{const fetcher=vi.fn().mockResolvedValue(new Response(null,{status:403}));expect((await checkStream("https://radio.example/live",fetcher)).status).toBe("restricted");});
   it("selects the highest priority verified fallback",()=>{
     expect(chooseFallback([{url:"first",status:"dead" as const,priority:1},{url:"second",status:"alive" as const,priority:2},{url:"third",status:"alive" as const,priority:3}])?.url).toBe("second");
   });
