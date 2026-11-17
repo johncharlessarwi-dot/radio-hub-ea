@@ -13,6 +13,7 @@ export function safePublicHttpUrl(raw: string, base?: string): string | null {
     if (!url.hostname || /^(localhost|.*\.localhost|.*\.local)$/i.test(url.hostname)) return null;
     if (/^(?:127\.|10\.|0\.|169\.254\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.)/.test(url.hostname)) return null;
     if (url.hostname === "[::1]" || url.hostname === "[::]" || /^(?:0\.|100\.(?:6[4-9]|[7-9]\d|1[01]\d|12[0-7])\.|198\.(?:18|19)\.|22[4-9]\.|23\d\.|24\d\.|25\d\.)/.test(url.hostname)) return null;
+    if (/(?:^|\.)internal\.?$/i.test(url.hostname)) return null;
     url.hash = "";
     if (url.port && !["80","443","8000","8001","8080","8443","8888"].includes(url.port)) return null;
     url.hash = "";
