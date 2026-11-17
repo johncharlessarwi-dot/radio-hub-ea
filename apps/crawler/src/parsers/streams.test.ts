@@ -38,4 +38,5 @@ describe("public stream discovery", () => {
   it("rejects reserved 192.0.0.0/24 hosts",()=>expect(safePublicHttpUrl("http://192.0.0.8/live")).toBeNull());
   it("rejects IPv4 documentation networks",()=>{for(const host of ["192.0.2.1","198.51.100.1","203.0.113.1"])expect(safePublicHttpUrl("https://"+host+"/live")).toBeNull();});
   it("rejects IPv4-mapped IPv6 addresses",()=>expect(safePublicHttpUrl("http://[::ffff:127.0.0.1]/admin")).toBeNull());
+  it("rejects 6to4 tunnel addresses",()=>expect(safePublicHttpUrl("http://[2002:7f00:1::1]/admin")).toBeNull());
 });
