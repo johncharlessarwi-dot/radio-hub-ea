@@ -48,4 +48,5 @@ describe("public stream discovery", () => {
   it("rejects alternative resolution namespace",()=>expect(safePublicHttpUrl("https://device.alt/live")).toBeNull());
   it("rejects deprecated 6to4 relay IPv4 addresses",()=>expect(safePublicHttpUrl("http://192.88.99.1/live")).toBeNull());
   it("rejects IPv4-translated NAT64 destinations",()=>expect(safePublicHttpUrl("https://[64:ff9b::7f00:1]/admin")).toBeNull());
+  it("excludes video-only sources from radio stream discovery",()=>expect(parsePublicStreams('<video><source src="/movie.mp4"></video>',"https://radio.example/")).toEqual([]));
 });
