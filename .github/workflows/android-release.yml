@@ -49,6 +49,7 @@ jobs:
         run: npm install
       - name: Verify TypeScript and tests
         run: |
+          npm audit --omit=dev --audit-level=high
           npm run lint
           npm run typecheck
           npm run test
