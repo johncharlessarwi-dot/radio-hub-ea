@@ -33,7 +33,10 @@ export async function checkStream(url: string, fetcher: typeof fetch = fetch): P
       lastError="HTTP "+response.status+" ("+contentType+")";
       if (method==="HEAD") continue;
       return {status:"dead",latencyMs,checkedAt,httpStatus:response.status,contentType,error:lastError};
-    } catch(e) {lastError=e instanceof Error?e.message:String(e);}
+    } catch(e) {
+      lastError=e instanceof Error?e.message:String(e);
+      if(/Unsafe DNS destination|Disallowed public URL/.test(lastError))return {status:"restricted",latencyMs:Math.round(performance.now()-start),checkedAt,httpStatus:null,contentType:null,error:"Unsafe destination"};
+    }
   }
   return {status:"unknown",latencyMs:Math.round(performance.now()-start),checkedAt,httpStatus:null,contentType:null,error:lastError};
 }
