@@ -13,5 +13,6 @@ describe("video source validation",()=>{
  it("rejects credential-bearing official source URLs",()=>{expect(videoSourceSchema.safeParse({...valid,officialWebsite:"https://admin:secret@example.org"}).success).toBe(false);});
  it("rejects FTP media endpoints",()=>{expect(videoSourceSchema.safeParse({...valid,type:"hls",sourceUrl:"ftp://media.example/live.m3u8"}).success).toBe(false);});
  it("requires attribution",()=>{expect(videoSourceSchema.safeParse({...valid,attribution:""}).success).toBe(false);});
+ it("rejects unsupported broadcaster countries",()=>{expect(videoSourceSchema.safeParse({...valid,country:"XX"}).success).toBe(false);});
  it("rejects unverifiable future timestamps",()=>{expect(videoSourceSchema.safeParse({...valid,verifiedAt:"2099-01-01T00:00:00.000Z"}).success).toBe(false);});
 });
