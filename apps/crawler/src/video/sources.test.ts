@@ -3,6 +3,7 @@ import {videoSourceSchema,youtubeEmbedUrl,type VideoSource} from "./sources.js";
 const valid:VideoSource={id:"public-live",title:"Public live",broadcaster:"Example",country:"TZ",type:"youtube",sourceUrl:"https://www.youtube.com/watch?v=abcdefghijk",officialWebsite:"https://www.example.org",attribution:"Official channel",verifiedAt:"2026-11-16T00:00:00.000Z",approved:false};
 describe("video source validation",()=>{
  it("accepts a syntactically valid official YouTube link without claiming authorization",()=>{expect(videoSourceSchema.safeParse(valid).success).toBe(true);expect(youtubeEmbedUrl(valid.sourceUrl)).toBe("https://www.youtube-nocookie.com/embed/abcdefghijk");});
+ it("does not embed query-bearing direct embed paths",()=>{expect(youtubeEmbedUrl("https://www.youtube.com/embed/abcdefghijk?v=abcdefghijk")).toBeNull();});
  it("does not embed ambiguous duplicate video IDs",()=>{expect(youtubeEmbedUrl("https://www.youtube.com/watch?v=abcdefghijk&v=zyxwvutsrqp")).toBeNull();});
  it("does not embed YouTube URLs with tracking or playlist parameters",()=>{expect(youtubeEmbedUrl("https://www.youtube.com/watch?v=abcdefghijk&list=playlist")).toBeNull();});
  it("does not embed nonstandard-port YouTube URLs",()=>{expect(youtubeEmbedUrl("https://www.youtube.com:8443/watch?v=abcdefghijk")).toBeNull();});
