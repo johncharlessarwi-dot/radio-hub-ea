@@ -17,6 +17,7 @@ export function safePublicHttpUrl(raw: string, base?: string): string | null {
     if (/(?:^|\.)lan\.?$/i.test(url.hostname)) return null;
     if (/(?:^|\.)home\.arpa\.?$/i.test(url.hostname)) return null;
     if (/^(?:localhost|.*\.localhost)\.$/i.test(url.hostname)) return null;
+    if (/\.local\.$/i.test(url.hostname)) return null;
     url.hash = "";
     if (url.port && !["80","443","8000","8001","8080","8443","8888"].includes(url.port)) return null;
     url.hash = "";
