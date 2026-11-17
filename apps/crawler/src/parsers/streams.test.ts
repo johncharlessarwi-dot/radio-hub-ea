@@ -35,4 +35,5 @@ describe("public stream discovery", () => {
   it("rejects IPv6 unique-local addresses",()=>expect(safePublicHttpUrl("https://[fd00::1]/private")).toBeNull());
   it("rejects IPv6 link-local addresses",()=>expect(safePublicHttpUrl("https://[fe80::1]/private")).toBeNull());
   it("rejects IPv6 multicast addresses",()=>expect(safePublicHttpUrl("https://[ff02::1]/private")).toBeNull());
+  it("rejects reserved 192.0.0.0/24 hosts",()=>expect(safePublicHttpUrl("http://192.0.0.8/live")).toBeNull());
 });
