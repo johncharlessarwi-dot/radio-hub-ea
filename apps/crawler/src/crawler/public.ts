@@ -2,6 +2,7 @@ import { lookup } from "node:dns/promises";
 import { isIP } from "node:net";
 import { parsePublicStreams, safePublicHttpUrl } from "../parsers/streams.js";
 import type { RadioDb } from "../db/database.js";
+import { fetchPublicUrl } from "../security/publicFetch.js";
 
 const previousRequest=new Map<string,number>();
 const MAX_HTML=512_000;
@@ -28,7 +29,8 @@ async function throttledFetch(url:string, fetcher:typeof fetch):Promise<Response
   const elapsed=Date.now()-(previousRequest.get(hostname)??0);
   if(elapsed<1000)await new Promise(r=>setTimeout(r,1000-elapsed));
   previousRequest.set(hostname,Date.now());
-  return fetcher(url,{headers:{"User-Agent":AGENT,"Accept":"text/html,text/plain;q=0.9,*/*;q=0.1"},redirect:"error",signal:AbortSignal.timeout(9000)});
+  const guardedFetch=fetcher===fetch ? fetchPublicUrl : fetcher;
+  return guardedFetch(url,{headers:{"User-Agent":AGENT,"Accept":"text/html,text/plain;q=0.9,*/*;q=0.1"},redirect:"error",signal:AbortSignal.timeout(9000)});
 }
 export function robotsAllows(content:string,path:string,userAgent="redio-hub-ea"):boolean{
   type Rule={path:string;allow:boolean};
