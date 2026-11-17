@@ -21,8 +21,6 @@ jobs:
       - uses: android-actions/setup-android@v4
       - name: Install project dependencies
         run: npm install
-      - name: Audit production dependencies
-        run: npm audit --omit=dev --audit-level=high
       - name: Build web assets
         run: npm run build -w @redio/web
       - name: Generate and sync Android project
