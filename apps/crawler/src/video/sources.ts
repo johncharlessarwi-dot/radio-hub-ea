@@ -44,7 +44,7 @@ export type VideoSource=z.infer<typeof videoSourceSchema>;
 export function youtubeEmbedUrl(sourceUrl:string):string|null{
   try{
     const u=new URL(sourceUrl);
-    if(u.protocol!=="https:"||!["youtube.com","www.youtube.com"].includes(u.hostname)||u.username||u.password||u.hash||u.port||[...u.searchParams.keys()].some(k=>k!=="v"))return null;
+    if(u.protocol!=="https:"||!["youtube.com","www.youtube.com"].includes(u.hostname)||u.username||u.password||u.hash||u.port||[...u.searchParams.keys()].some(k=>k!=="v")||u.searchParams.getAll("v").length>1)return null;
     const id=u.pathname.match(/^\/(?:embed|live)\/([A-Za-z0-9_-]{11})$/)?.[1]??(u.pathname==="/watch"?u.searchParams.get("v"):null);
     return id&&/^[A-Za-z0-9_-]{11}$/.test(id)?`https://www.youtube-nocookie.com/embed/${id}`:null;
   }catch{return null;}
