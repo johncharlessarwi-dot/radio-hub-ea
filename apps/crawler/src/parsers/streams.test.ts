@@ -32,4 +32,5 @@ describe("public stream discovery", () => {
   it("rejects home.arpa network names",()=>expect(safePublicHttpUrl("http://gateway.home.arpa/live")).toBeNull());
   it("rejects trailing-dot localhost aliases",()=>expect(safePublicHttpUrl("http://localhost./admin")).toBeNull());
   it("rejects trailing-dot local network names",()=>expect(safePublicHttpUrl("https://printer.local./live")).toBeNull());
+  it("rejects IPv6 unique-local addresses",()=>expect(safePublicHttpUrl("https://[fd00::1]/private")).toBeNull());
 });
