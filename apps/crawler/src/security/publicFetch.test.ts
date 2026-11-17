@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { choosePublicDnsAddress, isPublicAddress } from "./publicFetch.js";
+import { choosePublicDnsAddress, isPublicAddress, fetchPublicUrl } from "./publicFetch.js";
 
 describe("connection-bound outbound request validation",()=>{
   it("denies local, documentation, carrier-grade NAT and link-local addresses",()=>{
@@ -17,5 +17,8 @@ describe("connection-bound outbound request validation",()=>{
   });
   it("selects approved routable destinations",()=>{
     expect(choosePublicDnsAddress([{address:"8.8.8.8",family:4}])).toEqual({address:"8.8.8.8",family:4});
+  });
+  it("rejects an unsafe public URL before opening a connection",async()=>{
+    await expect(fetchPublicUrl("http://127.0.0.1/admin")).rejects.toThrow("Disallowed public URL");
   });
 });
