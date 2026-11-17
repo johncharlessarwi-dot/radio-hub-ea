@@ -50,6 +50,8 @@ const publicAgent=new Agent({
   }
 });
 export async function fetchPublicUrl(url:string,init:RequestInit={}):Promise<Response>{
+  const method=(init.method??"GET").toUpperCase();
+  if(method!=="GET"&&method!=="HEAD")throw Error("Outbound method not permitted");
   const safe=safePublicHttpUrl(url);
   if(!safe)throw Error("Disallowed public URL");
   // Node's built-in fetch uses Undici Dispatcher; its custom lookup binds
