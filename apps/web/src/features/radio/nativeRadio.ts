@@ -16,7 +16,7 @@ export const nativeRadio={
   async play(url:string,title:string,urls:string[]){
     if(!isSafeNativeStream(url))throw Error("HTTPS radio streams only");
     const approved=urls.filter(isSafeNativeStream).slice(0,8);
-    await bridge.play({url,title,urls:approved});
+    await bridge.play({url,title:title.slice(0,160),urls:approved});
   },
   pause:()=>bridge.pause(),
   stop:()=>bridge.stop(),
