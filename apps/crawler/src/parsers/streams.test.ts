@@ -46,4 +46,5 @@ describe("public stream discovery", () => {
   it("rejects reserved invalid DNS names",()=>expect(safePublicHttpUrl("https://fake.invalid/live")).toBeNull());
   it("rejects special-use test DNS destinations",()=>expect(safePublicHttpUrl("https://server.test/live")).toBeNull());
   it("rejects alternative resolution namespace",()=>expect(safePublicHttpUrl("https://device.alt/live")).toBeNull());
+  it("rejects deprecated 6to4 relay IPv4 addresses",()=>expect(safePublicHttpUrl("http://192.88.99.1/live")).toBeNull());
 });
