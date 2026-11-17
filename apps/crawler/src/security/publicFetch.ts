@@ -56,5 +56,5 @@ export async function fetchPublicUrl(url:string,init:RequestInit={}):Promise<Res
   if(!safe)throw Error("Disallowed public URL");
   // Node's built-in fetch uses Undici Dispatcher; its custom lookup binds
   // the validated IP to the actual connection, preventing DNS rebinding.
-  return fetch(safe,{...init,redirect:"error",dispatcher:publicAgent} as RequestInit & {dispatcher:Agent});
+  return fetch(safe,{...init,signal:init.signal??AbortSignal.timeout(9000),redirect:"error",dispatcher:publicAgent} as RequestInit & {dispatcher:Agent});
 }
