@@ -12,6 +12,7 @@ describe("community station import",()=>{
     expect(normalizeCommunityStation({...entry,url_resolved:"http://127.0.0.1/admin"})).toBeNull();
   });
   it("refuses HTTP-only community candidates",()=>{expect(normalizeCommunityStation({...entry,url_resolved:"http://stream.example/live"})).toBeNull();});
+  it("rejects oversized stream URLs",()=>{expect(normalizeCommunityStation({...entry,url_resolved:"https://radio.example/"+"x".repeat(2100)})).toBeNull();});
   it("imports as unapproved and deduplicates",()=>{
     const db=openDatabase(":memory:");
     const first=importCommunityStations(db,[entry,entry]);
