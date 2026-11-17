@@ -9,7 +9,7 @@ import { safePublicHttpUrl } from "../parsers/streams.js";
  * resolving to a private, reserved, or mixed-address set fails closed.
  */
 export function isPublicAddress(address:string):boolean {
-  if(address.startsWith("::ffff:"))return isPublicAddress(address.slice(7));
+  if(address.toLowerCase().startsWith("::ffff:"))return isPublicAddress(address.slice(7));
   if(isIP(address)===4){
     const p=address.split(".").map(Number);
     const [a,b,c]=p;
