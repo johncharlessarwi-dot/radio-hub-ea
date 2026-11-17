@@ -26,6 +26,7 @@ describe("Fastify API",()=>{
     expect((await app.inject("/videos?country=BAD")).statusCode).toBe(400);
     await app.close();
   });
+  it("rejects blank station search",async()=>{const app=await createApp(openDatabase(":memory:"));expect((await app.inject("/stations?search=%20%20")).statusCode).toBe(400);await app.close();});
   it("rejects excessive pagination offset",async()=>{const app=await createApp(openDatabase(":memory:"));expect((await app.inject("/stations?offset=999999999")).statusCode).toBe(400);await app.close();});
   it("rejects unsupported station countries",async()=>{const app=await createApp(openDatabase(":memory:"));expect((await app.inject("/stations?country=XX")).statusCode).toBe(400);await app.close();});
   it("rejects oversize station search terms",async()=>{const app=await createApp(openDatabase(":memory:"));expect((await app.inject("/stations?search="+"x".repeat(90))).statusCode).toBe(400);await app.close();});
