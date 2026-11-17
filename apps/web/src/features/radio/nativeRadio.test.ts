@@ -14,6 +14,7 @@ describe("Capacitor native audio bridge",()=>{
  });
  it("rejects credentials embedded in native stream URLs",async()=>{await expect(nativeRadio.play("https://user:pass@radio.example/live","FM",[])).rejects.toThrow("HTTPS");});
  it("rejects fragment-bearing native streams",async()=>{await expect(nativeRadio.play("https://radio.example/live#hidden","FM",[])).rejects.toThrow("HTTPS");});
+ it("filters credential-bearing fallback sources",async()=>{await nativeRadio.play("https://radio.example/live","FM",["https://login:pw@radio.example/admin"]);expect(play).toHaveBeenLastCalledWith({url:"https://radio.example/live",title:"FM",urls:[]});});
  it("sends only HTTPS fallback URLs",async()=>{
    await nativeRadio.play("https://radio.example/live","Test FM",["https://radio.example/live","http://insecure.example/live"]);
    expect(play).toHaveBeenCalledWith({url:"https://radio.example/live",title:"Test FM",urls:["https://radio.example/live"]});
