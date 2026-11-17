@@ -21,5 +21,5 @@ export const nativeRadio={
   pause:()=>bridge.pause(),
   stop:()=>bridge.stop(),
   setVolume:(volume:number)=>bridge.setVolume({volume:Number.isFinite(volume)?Math.min(1,Math.max(0,volume)):0.8}),
-  setSleepTimer:(minutes:number)=>bridge.setSleepTimer({minutes})
+  setSleepTimer:(minutes:number)=>bridge.setSleepTimer({minutes:Number.isFinite(minutes)?Math.min(1440,Math.max(0,Math.trunc(minutes))):0})
 };
