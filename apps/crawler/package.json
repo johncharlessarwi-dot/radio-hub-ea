@@ -20,7 +20,8 @@
     "node-cron": "^3.0.0",
     "pino": "^9.0.0",
     "zod": "^3.0.0",
-    "@fastify/rate-limit": "^10.3.0"
+    "@fastify/rate-limit": "^10.3.0",
+    "undici": "^6.21.3"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.0",
