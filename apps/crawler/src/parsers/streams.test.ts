@@ -14,6 +14,7 @@ describe("public stream discovery", () => {
     expect(parsePlaylist("#EXTM3U\n#EXTINF:-1,Station\nhttps://streams.example/live.mp3","https://radio.example/list.m3u")).toEqual(["https://streams.example/live.mp3"]);
     expect(parsePlaylist("[playlist]\nFile1=https://streams.example/live\nTitle1=Radio\n","https://radio.example/list.pls")).toEqual(["https://streams.example/live"]);
   });
+  it("rejects oversized playlists",()=>expect(parsePlaylist("A".repeat(131073),"https://radio.example/list.m3u")).toEqual([]));
   it("discards local hosts and unsafe schemes", () => {
     expect(safePublicHttpUrl("http://127.0.0.1/admin")).toBeNull();
     expect(safePublicHttpUrl("javascript:alert(1)")).toBeNull();
