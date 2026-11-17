@@ -1,5 +1,5 @@
 import { safePublicHttpUrl } from "../parsers/streams.js";
-import { validateCrawlerTarget } from "../crawler/public.js";
+import { fetchPublicUrl } from "../security/publicFetch.js";
 
 export type HealthStatus = "alive" | "dead" | "unknown" | "restricted";
 export interface HealthResult { status: HealthStatus; latencyMs: number | null; checkedAt: string; httpStatus: number | null; contentType: string | null; error: string | null }
@@ -10,15 +10,12 @@ function accepted(type: string, url: string) {
 export async function checkStream(url: string, fetcher: typeof fetch = fetch): Promise<HealthResult> {
   const checkedAt = new Date().toISOString();
   if (!safePublicHttpUrl(url)) return {status:"restricted",latencyMs:null,checkedAt,httpStatus:null,contentType:null,error:"Unsafe URL"};
-  if (fetcher === fetch) {
-    try { await validateCrawlerTarget(url); }
-    catch { return {status:"restricted",latencyMs:null,checkedAt,httpStatus:null,contentType:null,error:"Unsafe DNS destination"}; }
-  }
+  const guardedFetch=fetcher===fetch ? fetchPublicUrl : fetcher;
   const start = performance.now();
   let lastError: string | null = null;
   for (const method of ["HEAD", "GET"] as const) {
     try {
-      const response = await fetcher(url,{
+      const response = await guardedFetch(url,{
         method,
         redirect:"error",
         signal:AbortSignal.timeout(7000),
