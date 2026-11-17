@@ -7,7 +7,8 @@ describe("connection-bound outbound request validation",()=>{
       expect(isPublicAddress(ip),ip).toBe(false);
     }
   });
-  it("accepts routable public example addresses",()=>{
+  it("denies private IPv6 special-use prefixes",()=>{for(const ip of ["2001:db8::1","2001:10::1","2001:20::1"])expect(isPublicAddress(ip)).toBe(false);});
+  it("accepts routable public example addresses()=>{
     expect(isPublicAddress("8.8.8.8")).toBe(true);
     expect(isPublicAddress("2606:4700:4700::1111")).toBe(true);
   });
