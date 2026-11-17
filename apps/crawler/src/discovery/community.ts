@@ -61,9 +61,19 @@ export async function fetchCommunityStations(country:"TZ"|"KE"|"UG"|"RW"|"BI",fe
       if(!response.ok)continue;
       const length=Number(response.headers.get("content-length")??0);
       if(length>1_000_000)throw Error("Community response too large");
-      const bytes=await response.arrayBuffer();
-      if(bytes.byteLength>1_000_000)throw Error("Community response exceeds limit");
-      const json:unknown=JSON.parse(new TextDecoder().decode(bytes));
+      const reader=response.body?.getReader();
+      if(!reader)throw Error("Community response body missing");
+      const chunks:Uint8Array[]=[];let count=0;
+      try{
+        while(true){
+          const {done,value}=await reader.read();
+          if(done)break;
+          count+=value.byteLength;
+          if(count>1_000_000)throw Error("Community response exceeds limit");
+          chunks.push(value);
+        }
+      }finally{await reader.cancel().catch(()=>{});}
+      const json:unknown=JSON.parse(new TextDecoder().decode(Buffer.concat(chunks)));
       if(!Array.isArray(json)||json.length>100)throw Error("Invalid community response");
       return json;
     }catch{ /* try another fixed mirror */ }
