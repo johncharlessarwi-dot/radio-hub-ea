@@ -15,6 +15,7 @@ describe("community station import",()=>{
   it("rejects oversized stream URLs",()=>{expect(normalizeCommunityStation({...entry,url_resolved:"https://radio.example/"+"x".repeat(2100)})).toBeNull();});
   it("rejects stations outside the five supported countries",()=>{expect(normalizeCommunityStation({...entry,countrycode:"ZZ"})).toBeNull();});
   it("rejects station entries without a valid UUID",()=>{expect(normalizeCommunityStation({...entry,stationuuid:"not-a-uuid"})).toBeNull();});
+  it("rejects overly long station names",()=>{expect(normalizeCommunityStation({...entry,name:"R".repeat(201)})).toBeNull();});
   it("imports as unapproved and deduplicates",()=>{
     const db=openDatabase(":memory:");
     const first=importCommunityStations(db,[entry,entry]);
