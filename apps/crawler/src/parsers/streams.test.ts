@@ -34,4 +34,5 @@ describe("public stream discovery", () => {
   it("rejects trailing-dot local network names",()=>expect(safePublicHttpUrl("https://printer.local./live")).toBeNull());
   it("rejects IPv6 unique-local addresses",()=>expect(safePublicHttpUrl("https://[fd00::1]/private")).toBeNull());
   it("rejects IPv6 link-local addresses",()=>expect(safePublicHttpUrl("https://[fe80::1]/private")).toBeNull());
+  it("rejects IPv6 multicast addresses",()=>expect(safePublicHttpUrl("https://[ff02::1]/private")).toBeNull());
 });
