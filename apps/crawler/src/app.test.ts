@@ -33,6 +33,7 @@ describe("Fastify API",()=>{
   it("enforces frame-ancestor restriction",async()=>{const app=await createApp(openDatabase(":memory:"));expect((await app.inject("/health")).headers["content-security-policy"]).toContain("frame-ancestors");await app.close();});
   it("rejects control characters in problem reports",async()=>{const app=await createApp(openDatabase(":memory:"));const r=await app.inject({method:"POST",url:"/reports",payload:{stationId:"clouds-fm",detail:"bad\\nheader"}});expect(r.statusCode).toBe(400);await app.close();});
   it("rejects unknown video filters",async()=>{const app=await createApp(openDatabase(":memory:"));expect((await app.inject("/videos?isAdmin=true")).statusCode).toBe(400);await app.close();});
+  it("rejects malformed station IDs",async()=>{const app=await createApp(openDatabase(":memory:"));expect((await app.inject("/stations/INVALID_!")).statusCode).toBe(400);await app.close();});
   it("adds no-store and content-type protection headers",async()=>{const app=await createApp(openDatabase(":memory:"));const response=await app.inject("/health");expect(response.headers["x-content-type-options"]).toBe("nosniff");expect(response.headers["cache-control"]).toContain("no-store");await app.close();});
   it("rejects unexpected report parameters",async()=>{const app=await createApp(openDatabase(":memory:"));const response=await app.inject({method:"POST",url:"/reports",payload:{stationId:"clouds-fm",detail:"broken",isAdmin:true}});expect(response.statusCode).toBe(400);await app.close();});
 });
