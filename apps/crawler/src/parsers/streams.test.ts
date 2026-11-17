@@ -28,4 +28,5 @@ describe("public stream discovery", () => {
   it("rejects credentials and management service ports",()=>{expect(safePublicHttpUrl("https://user:pass@radio.example/live")).toBeNull();expect(safePublicHttpUrl("http://radio.example:2375/live")).toBeNull();});
   it("rejects newline and control-character injection",()=>{expect(safePublicHttpUrl("https://radio.example/live\nX-Test: bad")).toBeNull();});
   it("rejects internal-only DNS names",()=>expect(safePublicHttpUrl("https://admin.internal/live")).toBeNull());
+  it("rejects LAN DNS hostnames",()=>expect(safePublicHttpUrl("https://radio.lan/live")).toBeNull());
 });
