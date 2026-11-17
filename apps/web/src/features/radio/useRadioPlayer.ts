@@ -119,7 +119,6 @@ export function useRadioPlayer() {
       audio.current=null;
     };
   // A single audio engine must survive UI tab switches.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[native]);
   return {station,status,volume,sleepMinutes,expanded,setExpanded,play,pause,resume,stop,setPlayerVolume,setTimer,nextSource:()=>void startSource.current(sourceIndex.current+1<(current.current?.streamUrls.length??0)?sourceIndex.current+1:0)};
 }
