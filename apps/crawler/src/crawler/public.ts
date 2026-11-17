@@ -1,27 +1,17 @@
-import { lookup } from "node:dns/promises";
-import { isIP } from "node:net";
 import { parsePublicStreams, safePublicHttpUrl } from "../parsers/streams.js";
 import type { RadioDb } from "../db/database.js";
-import { fetchPublicUrl } from "../security/publicFetch.js";
+import { fetchPublicUrl, choosePublicDnsAddress } from "../security/publicFetch.js";
+import { lookup } from "node:dns/promises";
 
 const previousRequest=new Map<string,number>();
 const MAX_HTML=512_000;
 const AGENT="REDIO-HUB-EA/0.1 (+https://github.com/johncharlessarwi-dot/radio-hub-ea; contact via GitHub issues)";
-function privateAddress(address:string):boolean {
-  if(address.startsWith("::ffff:"))return privateAddress(address.substring(7));
-  if(isIP(address)===4){
-    const [a,b]=address.split(".").map(Number);
-    return a===0||a===10||a===127||a>=224||a===169&&b===254||a===172&&b>=16&&b<=31||a===192&&(b===168||b===0)||a===100&&b>=64&&b<=127||a===198&&(b===18||b===19);
-  }
-  if(isIP(address)===6)return address==="::"||address==="::1"||/^f[cd]/i.test(address)||/^fe[89ab]/i.test(address)||/^2001:db8:/i.test(address);
-  return true;
-}
 export async function validateCrawlerTarget(url:string) {
   const canonical=safePublicHttpUrl(url);
   if(!canonical)throw Error("Disallowed URL");
   const host=new URL(canonical).hostname;
   const addresses=await lookup(host,{all:true});
-  if(!addresses.length||addresses.some(a=>privateAddress(a.address)))throw Error("Unsafe DNS destination");
+  choosePublicDnsAddress(addresses);
   return canonical;
 }
 async function throttledFetch(url:string, fetcher:typeof fetch):Promise<Response>{
