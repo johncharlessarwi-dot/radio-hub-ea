@@ -27,6 +27,7 @@ describe("Fastify API",()=>{
     await app.close();
   });
   it("rejects excessive pagination offset",async()=>{const app=await createApp(openDatabase(":memory:"));expect((await app.inject("/stations?offset=999999999")).statusCode).toBe(400);await app.close();});
+  it("rejects unsupported station countries",async()=>{const app=await createApp(openDatabase(":memory:"));expect((await app.inject("/stations?country=XX")).statusCode).toBe(400);await app.close();});
   it("adds no-store and content-type protection headers",async()=>{const app=await createApp(openDatabase(":memory:"));const response=await app.inject("/health");expect(response.headers["x-content-type-options"]).toBe("nosniff");expect(response.headers["cache-control"]).toContain("no-store");await app.close();});
   it("rejects unexpected report parameters",async()=>{const app=await createApp(openDatabase(":memory:"));const response=await app.inject({method:"POST",url:"/reports",payload:{stationId:"clouds-fm",detail:"broken",isAdmin:true}});expect(response.statusCode).toBe(400);await app.close();});
 });
