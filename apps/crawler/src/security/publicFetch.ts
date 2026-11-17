@@ -29,6 +29,8 @@ export function isPublicAddress(address:string):boolean {
     const normalized=address.toLowerCase();
     if(!/^[23][0-9a-f]{3}:/.test(normalized))return false;
     if(normalized.startsWith("2001:db8:"))return false;
+    if(normalized.startsWith("2001:10:"))return false;
+    if(normalized.startsWith("2001:20:"))return false;
     return true;
   }
   return false;
