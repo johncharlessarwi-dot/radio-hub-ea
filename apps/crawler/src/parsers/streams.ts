@@ -50,5 +50,5 @@ export function parsePlaylist(content: string, playlistUrl: string): string[] {
     if (!value) return [];
     return [safePublicHttpUrl(value, playlistUrl)];
   });
-  return unique(candidates);
+  return unique(candidates).slice(0,100);
 }
