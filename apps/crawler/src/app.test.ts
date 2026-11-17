@@ -29,6 +29,7 @@ describe("Fastify API",()=>{
   it("rejects blank station search",async()=>{const app=await createApp(openDatabase(":memory:"));expect((await app.inject("/stations?search=%20%20")).statusCode).toBe(400);await app.close();});
   it("rejects noninteger pagination limits",async()=>{const app=await createApp(openDatabase(":memory:"));expect((await app.inject("/stations?limit=1.5")).statusCode).toBe(400);await app.close();});
   it("rejects unexpected station query keys",async()=>{const app=await createApp(openDatabase(":memory:"));expect((await app.inject("/stations?approved=true")).statusCode).toBe(400);await app.close();});
+  it("rejects whitespace-only report details",async()=>{const app=await createApp(openDatabase(":memory:"));const r=await app.inject({method:"POST",url:"/reports",payload:{stationId:"clouds-fm",detail:"  "}});expect(r.statusCode).toBe(400);await app.close();});
   it("rejects excessive pagination offset",async()=>{const app=await createApp(openDatabase(":memory:"));expect((await app.inject("/stations?offset=999999999")).statusCode).toBe(400);await app.close();});
   it("rejects unsupported station countries",async()=>{const app=await createApp(openDatabase(":memory:"));expect((await app.inject("/stations?country=XX")).statusCode).toBe(400);await app.close();});
   it("rejects oversize station search terms",async()=>{const app=await createApp(openDatabase(":memory:"));expect((await app.inject("/stations?search="+"x".repeat(90))).statusCode).toBe(400);await app.close();});
