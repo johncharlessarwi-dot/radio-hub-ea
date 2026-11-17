@@ -29,6 +29,7 @@ export const videoSourceSchema=z.object({
     }
     if([...source.searchParams.keys()].some(k=>k!=="v")){ctx.addIssue({code:"custom",message:"Unexpected YouTube query parameter"});return;}
     if(source.searchParams.getAll("v").length>1){ctx.addIssue({code:"custom",message:"Duplicate YouTube video identifiers"});return;}
+    if(source.pathname!=="/watch"&&source.search){ctx.addIssue({code:"custom",message:"Embed and live paths may not contain query parameters"});return;}
     const id=source.pathname.match(/^\/(?:embed|live)\/([A-Za-z0-9_-]{11})$/)?.[1]
       ??(source.pathname==="/watch"?source.searchParams.get("v"):null);
     if(!id||!/^[A-Za-z0-9_-]{11}$/.test(id)){
