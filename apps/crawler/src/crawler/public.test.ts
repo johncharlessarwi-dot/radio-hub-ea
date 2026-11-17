@@ -1,6 +1,7 @@
 import {describe,expect,it} from "vitest";
 import {robotsAllows} from "./public.js";
 describe("robots policy",()=>{
+  it("ignores malformed empty user-agent groups",()=>{expect(robotsAllows("User-agent: \nDisallow: /private","/private")).toBe(true);});
   it("respects wildcard disallows",()=>{expect(robotsAllows("User-agent: *\nDisallow: /private","/private/list")).toBe(false);});
   it("accepts public pages",()=>{expect(robotsAllows("User-agent: *\nDisallow: /private","/live")).toBe(true);});
   it("does not apply rules for a different crawler",()=>{
