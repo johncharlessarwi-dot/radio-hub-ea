@@ -50,6 +50,7 @@ export function parsePublicStreams(html: string, pageUrl: string): string[] {
   $("audio[src], audio source[src], video source[src], a[href], link[href]").each((_, el) => {
     const attr = $(el).attr("src") ?? $(el).attr("href");
     if (!attr) return;
+    if (el.tagName.toLowerCase() === "source" && $(el).closest("video").length > 0) return;
     const candidate = safePublicHttpUrl(attr, pageUrl);
     const isMediaTag = ["audio", "source"].includes(el.tagName.toLowerCase());
     if (candidate && (isMediaTag || EXTS.test(candidate) || MEDIA.test(candidate) || STREAM.test(candidate))) found.push(candidate);
