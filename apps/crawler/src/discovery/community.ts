@@ -44,7 +44,7 @@ export function importCommunityStations(db:RadioDb, entries:unknown[]):{imported
       const id="community-"+row.stationuuid;
       const languages=JSON.stringify((row.language??"").split(",").map(s=>s.trim()).filter(Boolean).slice(0,8));
       const genres=JSON.stringify((row.tags??"").split(",").map(s=>s.trim()).filter(Boolean).slice(0,8));
-      addStation.run(id,row.name,row.countrycode,languages,genres,safePublicHttpUrl(row.favicon??""),safePublicHttpUrl(row.homepage??""));
+      addStation.run(id,row.name,row.countrycode,languages,genres,(safePublicHttpUrl(row.favicon??"")?.startsWith("https://")?safePublicHttpUrl(row.favicon??""):null),(safePublicHttpUrl(row.homepage??"")?.startsWith("https://")?safePublicHttpUrl(row.homepage??""):null));
       addStream.run(id,row.streamUrl);
       imported++;
     }
