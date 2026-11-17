@@ -30,6 +30,7 @@ describe("Fastify API",()=>{
   it("rejects unsupported station countries",async()=>{const app=await createApp(openDatabase(":memory:"));expect((await app.inject("/stations?country=XX")).statusCode).toBe(400);await app.close();});
   it("rejects oversize station search terms",async()=>{const app=await createApp(openDatabase(":memory:"));expect((await app.inject("/stations?search="+"x".repeat(90))).statusCode).toBe(400);await app.close();});
   it("sets frame-denial header",async()=>{const app=await createApp(openDatabase(":memory:"));expect((await app.inject("/health")).headers["x-frame-options"]).toBe("DENY");await app.close();});
+  it("enforces frame-ancestor restriction",async()=>{const app=await createApp(openDatabase(":memory:"));expect((await app.inject("/health")).headers["content-security-policy"]).toContain("frame-ancestors");await app.close();});
   it("adds no-store and content-type protection headers",async()=>{const app=await createApp(openDatabase(":memory:"));const response=await app.inject("/health");expect(response.headers["x-content-type-options"]).toBe("nosniff");expect(response.headers["cache-control"]).toContain("no-store");await app.close();});
   it("rejects unexpected report parameters",async()=>{const app=await createApp(openDatabase(":memory:"));const response=await app.inject({method:"POST",url:"/reports",payload:{stationId:"clouds-fm",detail:"broken",isAdmin:true}});expect(response.statusCode).toBe(400);await app.close();});
 });
