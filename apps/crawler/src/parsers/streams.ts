@@ -25,6 +25,7 @@ export function safePublicHttpUrl(raw: string, base?: string): string | null {
     if (/^(?:192\.0\.2\.|198\.51\.100\.|203\.0\.113\.)/.test(url.hostname)) return null;
     if (/^\[::ffff:/i.test(url.hostname)) return null;
     if (/^\[2002:/i.test(url.hostname)) return null;
+    if (/^\[2001:0:/i.test(url.hostname)) return null;
     url.hash = "";
     if (url.port && !["80","443","8000","8001","8080","8443","8888"].includes(url.port)) return null;
     url.hash = "";
