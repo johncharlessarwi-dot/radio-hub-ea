@@ -9,5 +9,6 @@ describe("video source validation",()=>{
  it("rejects localhost and internal network video endpoints",()=>{expect(videoSourceSchema.safeParse({...valid,type:"hls",sourceUrl:"https://127.0.0.1/live.m3u8"}).success).toBe(false);});
  it("rejects extra YouTube parameters on approved metadata",()=>{expect(videoSourceSchema.safeParse({...valid,sourceUrl:"https://www.youtube.com/watch?v=abcdefghijk&list=PLmalicious"}).success).toBe(false);});
  it("rejects URL fragment injection",()=>{expect(videoSourceSchema.safeParse({...valid,sourceUrl:valid.sourceUrl+"#fragment"}).success).toBe(false);});
+ it("rejects HLS manifests with URL query secrets",()=>{expect(videoSourceSchema.safeParse({...valid,type:"hls",sourceUrl:"https://media.example/live.m3u8?token=secret"}).success).toBe(false);});
  it("rejects unverifiable future timestamps",()=>{expect(videoSourceSchema.safeParse({...valid,verifiedAt:"2099-01-01T00:00:00.000Z"}).success).toBe(false);});
 });
