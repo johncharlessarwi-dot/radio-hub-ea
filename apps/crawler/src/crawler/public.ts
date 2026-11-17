@@ -41,7 +41,7 @@ export function robotsAllows(content:string,path:string,userAgent="redio-hub-ea"
     }
   }
   const ranked=groups.map(g=>({
-    rank:Math.max(-1,...g.agents.map(a=>a==="*"?0:userAgent.toLowerCase().includes(a)?a.length:-1)),
+    rank:Math.max(-1,...g.agents.map(a=>a==="*"?0:a.length>0&&userAgent.toLowerCase().includes(a)?a.length:-1)),
     rules:g.rules,
   }));
   const highest=Math.max(-1,...ranked.map(g=>g.rank));
