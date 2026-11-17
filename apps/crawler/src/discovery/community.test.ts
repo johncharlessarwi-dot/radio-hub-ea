@@ -16,6 +16,7 @@ describe("community station import",()=>{
   it("rejects stations outside the five supported countries",()=>{expect(normalizeCommunityStation({...entry,countrycode:"ZZ"})).toBeNull();});
   it("rejects station entries without a valid UUID",()=>{expect(normalizeCommunityStation({...entry,stationuuid:"not-a-uuid"})).toBeNull();});
   it("rejects overly long station names",()=>{expect(normalizeCommunityStation({...entry,name:"R".repeat(201)})).toBeNull();});
+  it("rejects excessively large tag strings",()=>{expect(normalizeCommunityStation({...entry,tags:"a".repeat(1025)})).toBeNull();});
   it("imports as unapproved and deduplicates",()=>{
     const db=openDatabase(":memory:");
     const first=importCommunityStations(db,[entry,entry]);
