@@ -23,6 +23,7 @@ function unique(urls: Array<string | null>): string[] {
   return [...new Set(urls.filter((url): url is string => Boolean(url)))];
 }
 export function parsePublicStreams(html: string, pageUrl: string): string[] {
+  if(html.length>524288)return [];
   const $ = cheerio.load(html);
   const found: Array<string | null> = [];
   $("audio[src], audio source[src], video source[src], a[href], link[href]").each((_, el) => {
