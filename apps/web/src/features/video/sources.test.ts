@@ -5,5 +5,6 @@ describe("safe video URLs",()=>{
  it("builds a privacy-enhanced YouTube iframe",()=>expect(youtubeEmbedUrl(source.sourceUrl)).toBe("https://www.youtube-nocookie.com/embed/abcdefghijk"));
  it("rejects lookalike YouTube hosts",()=>expect(youtubeEmbedUrl("https://youtube.com.evil.test/watch?v=abcdefghijk")).toBeNull());
  it("rejects unsafe HLS URLs",()=>expect(isSafeVideoSource({...source,type:"hls",sourceUrl:"http://example.com/live.m3u8"})).toBe(false));
+ it("rejects insecure official broadcaster sites",()=>expect(isSafeVideoSource({...source,officialWebsite:"http://broadcaster.example"})).toBe(false));
  it("permits explicit HTTPS HLS manifests",()=>expect(isSafeVideoSource({...source,type:"hls",sourceUrl:"https://stream.example/live.m3u8"})).toBe(true));
 });
