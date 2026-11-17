@@ -12,6 +12,7 @@ export function openDatabase(dbPath=process.env.DB_PATH??resolve(process.cwd(),"
   db.pragma("busy_timeout = 3000");
   db.pragma("foreign_keys = ON");
   db.pragma("trusted_schema = OFF");
+  db.pragma("recursive_triggers = OFF");
   db.exec(`
     CREATE TABLE IF NOT EXISTS stations (
       id TEXT PRIMARY KEY,
