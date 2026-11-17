@@ -18,6 +18,7 @@ describe("connection-bound outbound request validation",()=>{
   it("selects approved routable destinations",()=>{
     expect(choosePublicDnsAddress([{address:"8.8.8.8",family:4}])).toEqual({address:"8.8.8.8",family:4});
   });
+  it("rejects arbitrary outbound POST requests",async()=>{await expect(fetchPublicUrl("https://example.com/",{method:"POST"})).rejects.toThrow("Outbound method");});
   it("rejects an unsafe public URL before opening a connection",async()=>{
     await expect(fetchPublicUrl("http://127.0.0.1/admin")).rejects.toThrow("Disallowed public URL");
   });
