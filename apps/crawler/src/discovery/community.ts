@@ -24,7 +24,7 @@ export function normalizeCommunityStation(input:unknown): (CommunityStation & {s
   if(!parsed.success)return null;
   const row=parsed.data;
   const streamUrl=safePublicHttpUrl(row.url_resolved??row.url??"");
-  if(!streamUrl)return null;
+  if(!streamUrl||!streamUrl.startsWith("https://"))return null;
   return {...row,streamUrl};
 }
 export function importCommunityStations(db:RadioDb, entries:unknown[]):{imported:number;skipped:number} {
