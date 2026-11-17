@@ -41,6 +41,7 @@ export function parsePublicStreams(html: string, pageUrl: string): string[] {
   return unique(found).slice(0,100);
 }
 export function parsePlaylist(content: string, playlistUrl: string): string[] {
+  if(content.length>131072)return [];
   const lines = content.split(/\r?\n/).slice(0, MAX_PLAYLIST_LINES);
   const isPls = /\[playlist\]/i.test(content.slice(0, 200));
   const candidates = lines.flatMap(line => {
