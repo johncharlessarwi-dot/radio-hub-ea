@@ -13,6 +13,7 @@ describe("community station import",()=>{
   });
   it("refuses HTTP-only community candidates",()=>{expect(normalizeCommunityStation({...entry,url_resolved:"http://stream.example/live"})).toBeNull();});
   it("rejects oversized stream URLs",()=>{expect(normalizeCommunityStation({...entry,url_resolved:"https://radio.example/"+"x".repeat(2100)})).toBeNull();});
+  it("rejects stations outside the five supported countries",()=>{expect(normalizeCommunityStation({...entry,countrycode:"ZZ"})).toBeNull();});
   it("imports as unapproved and deduplicates",()=>{
     const db=openDatabase(":memory:");
     const first=importCommunityStations(db,[entry,entry]);
