@@ -33,6 +33,8 @@ export const videoSourceSchema=z.object({
     if(!id||!/^[A-Za-z0-9_-]{11}$/.test(id)){
       ctx.addIssue({code:"custom",message:"Must refer to an exact YouTube video or live broadcast ID"});
     }
+  }else if(source.search){
+    ctx.addIssue({code:"custom",message:"HLS playlists may not contain query tokens"});
   }else if(!/\.m3u8(?:$|[?#])/i.test(source.href)){
     ctx.addIssue({code:"custom",message:"HLS video must reference an explicit .m3u8 manifest"});
   }
