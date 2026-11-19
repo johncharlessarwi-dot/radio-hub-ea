@@ -1,9 +1,11 @@
 // @vitest-environment jsdom
-import { describe, expect, it, vi } from "vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { StationCard } from "./StationCard";
 import { t } from "../i18n/translations";
 import type { Station } from "../features/radio/types";
+
+afterEach(cleanup);
 
 const station:Station={id:"test-radio",name:"Test Radio",country:"TZ",city:"Moshi",genre:["Music"],streamUrls:["https://streams.example/live.mp3"]};
 describe("StationCard component",()=>{
