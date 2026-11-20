@@ -1,11 +1,11 @@
 <p align="center">
   <a href="https://github.com/johncharlessarwi-dot"><img src="https://avatars.githubusercontent.com/u/263143496?v=4" width="120" height="120" alt="John Charles Sarwi" /></a>
+  <br />
+  <a href="https://wa.me/255698170989">Chat na John kwenye WhatsApp · +255 698 170 989</a>
 </p>
 
 <p align="center">
   <img src="https://readme-typing-svg.demolab.com?lines=Redio%20Hub%20EA&amp;center=true&amp;vCenter=true&amp;width=300&amp;color=38BDF8" alt="Redio Hub EA" />
-  <br />
-  <a href="https://wa.me/255698170989?text=Habari%20John%2C%20nimeona%20Redio%20Hub%20EA%20kwenye%20GitHub."><img src="https://img.shields.io/badge/WhatsApp-Chat%20na%20John-168342?style=for-the-badge&amp;logo=whatsapp&amp;logoColor=white" alt="Chat na John kwenye WhatsApp" /></a>
 </p>
 
 # REDIO HUB EA 📻
