@@ -130,6 +130,16 @@ export default function App() {
         {reportMessage&&<p role="status" className="report-status">{reportMessage}</p>}
       </div>}
     </div>}
-    <nav className="mobile-nav" aria-label="Mobile navigation"><button className={tab==="radio"?"active":""} onClick={()=>setTab("radio")}><Radio size={21}/>{tr("radio")}</button><button className={tab==="video"?"active":""} onClick={()=>setTab("video")}><Tv size={21}/>{tr("video")}</button><button onClick={()=>{setTab("radio");setSection("favourites");}}><Heart size={21}/>{tr("favourites")}</button></nav>
+    <nav className="mobile-nav" aria-label="Mobile navigation">
+      <button className={tab === "radio" && section !== "favourites" ? "active" : ""} aria-current={tab === "radio" && section !== "favourites" ? "page" : undefined} onClick={() => { setTab("radio"); setSection("all"); }}>
+        <Radio size={21}/>{tr("radio")}
+      </button>
+      <button className={tab === "video" ? "active" : ""} aria-current={tab === "video" ? "page" : undefined} onClick={() => setTab("video")}>
+        <Tv size={21}/>{tr("video")}
+      </button>
+      <button className={tab === "radio" && section === "favourites" ? "active" : ""} aria-current={tab === "radio" && section === "favourites" ? "page" : undefined} onClick={() => { setTab("radio"); setSection("favourites"); }}>
+        <Heart size={21}/>{tr("favourites")}
+      </button>
+    </nav>
   </div>;
 }
