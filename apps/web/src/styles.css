@@ -34,3 +34,9 @@
 .install-app{display:flex;align-items:center;gap:7px;background:linear-gradient(105deg,#00d5ff,#8ca0ff);color:#061221;border:0;padding:10px 14px;border-radius:12px;font-weight:800;font-size:12px;min-height:40px}
 .install-app:focus-visible{outline:2px solid #fff;outline-offset:3px}
 @media(max-width:480px){.install-app span{display:none}.install-app{padding:10px}}
+
+@media (max-width: 700px) {
+  .mobile-nav button { min-height: 44px; flex: 1; justify-content: center; }
+  .player-bar { bottom: calc(60px + max(12px, env(safe-area-inset-bottom))); }
+  .content { padding-bottom: calc(190px + env(safe-area-inset-bottom)); }
+}
